@@ -57,13 +57,18 @@ Vagrant.configure('2') do |config|
       setting.vm.box = settings['box']
       setting.vm.hostname = settings['fqdn']
       setting.vm.network :private_network, ip: settings['ip']
-      setting.vbguest.installer_options = { allow_kernel_upgrade: true } if settings['box'].start_with?('centos')
+      setting.vbguest.installer_options = { allow_kernel_upgrade: true } if settings['box'].start_with?('centos', 'almalinux')
       setting.vm.provision 'shell', path: 'scripts/vagrant-sethostname.sh', args: settings['fqdn'].to_s
       setting.hostmanager.aliases = settings['aliases']
       setting.vm.provider 'virtualbox' do |v|
+        file_to_disk = "disks/#{settings['fqdn']}-second_disk.vmdk"
         v.customize ['modifyvm', :id, '--name', settings['fqdn']]
         v.customize ['modifyvm', :id, '--cpus', settings['cpu'].to_s]
         v.customize ['modifyvm', :id, '--memory', settings['memory'].to_s]
+        unless File.exist?(file_to_disk)
+          v.customize [ "createmedium", "disk", "--filename", file_to_disk, "--format", "vmdk", "--size", 1024 * 10 ]
+        end
+        v.customize [ "storageattach", settings['fqdn'] , "--storagectl", "SATA Controller", "--port", "2", "--device", "0", "--type", "hdd", "--medium", file_to_disk]
       end
     end
   end
