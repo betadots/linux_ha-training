@@ -1,0 +1,17 @@
+---
+# Default settings for all vms (they can be overridden on each node)
+default:
+  memory: 1612 # MB or RAM to assign - CentOS Installer needs at leas 1512 MB
+  cpu: 1 # Number of vCPU to assign to the VM
+  box: debian/bullseye64 # Box used for the VM
+  domain: betadots.training # Name of DNS domain for the created machines
+  disksize: '20G'
+
+# List of nodes shown in vagrant status
+nodes:
+  server1:
+    ip: 10.100.10.101
+  server2:
+    ip: 10.100.10.102
+  server3:
+    ip: 10.100.10.103
