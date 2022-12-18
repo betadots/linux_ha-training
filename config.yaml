@@ -5,7 +5,7 @@ default:
   cpu: 1 # Number of vCPU to assign to the VM
   box: almalinux/9 # Box used for the VM
   domain: betadots.training # Name of DNS domain for the created machines
-  disksize: "20G"
+  additional_disk_size: "20G"
 
 # List of nodes shown in vagrant status
 nodes:

@@ -66,7 +66,7 @@ Vagrant.configure('2') do |config|
         v.customize ['modifyvm', :id, '--cpus', settings['cpu'].to_s]
         v.customize ['modifyvm', :id, '--memory', settings['memory'].to_s]
         unless File.exist?(file_to_disk)
-          v.customize [ "createmedium", "disk", "--filename", file_to_disk, "--format", "vmdk", "--size", 1024 * 10 ]
+          v.customize [ "createmedium", "disk", "--filename", file_to_disk, "--format", "vmdk", "--size", 1024 * settings['additional_disk_size'] ]
         end
         v.customize [ "storageattach", settings['fqdn'] , "--storagectl", "SATA Controller", "--port", "2", "--device", "0", "--type", "hdd", "--medium", file_to_disk]
       end
