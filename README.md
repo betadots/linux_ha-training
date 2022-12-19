@@ -8,9 +8,9 @@ Einführung in Linux Hochverfügbarkeit
 
 - Grundlagen und Konzepte
 - Lastverteilung - Loadbalancing
-  - Ipvsadm + Ldirector <https://www.linux-magazin.de/ausgaben/2018/07/load-balancer/>
-    - HAProxy <https://linuxhandbook.com/load-balancing-setup/>
-    - Nginx
+  - Linux Virtual Server (LVS) - Ipvsadm + Ldirector <https://www.linux-magazin.de/ausgaben/2018/07/load-balancer/>
+  - HAProxy <https://linuxhandbook.com/load-balancing-setup/>
+  - Nginx
 - Hochverfürbarkeit
   - Keepalived
   - Pacemaker/Corosync <https://clusterlabs.org/> <https://clusterlabs.org/pacemaker/doc/2.1/Clusters_from_Scratch/html/>
@@ -24,7 +24,7 @@ Einführung in Linux Hochverfügbarkeit
   - GlusterFS <https://www.gluster.org/>
 - HA in Diensten
   - BIND
-  - MySQL
+  - MySQL/MariaDB + MaxScale
   - PostgreSQL
   - LDAP
 - HA mit Containern
@@ -40,7 +40,7 @@ Einführung in Linux Hochverfügbarkeit
 Tag 1:
 
 - Grundlagen und Konzepte
-- Ivpsadm und Ldirector
+- LVS (Ivpsadm und Ldirectord)
 - HAproxy
 - Nginx
 - Keepalived
@@ -54,7 +54,7 @@ Tag 2:
 Tag 3:
 
 - GlusterFS
-- Ceph
+- Ceph - Vorstellung
 - HA in Diensten - Diskussion, Vorstellung
 - HA mit Containern - Diskussion, Vorstellung
 

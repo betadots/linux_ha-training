@@ -5,7 +5,7 @@ require 'yaml'
 plugins = [
   'hostmanager',
   'vbguest',
-  'disksize',
+  # 'disksize',
 ]
 
 # Nodes configuration is defined in config.yaml
@@ -28,10 +28,10 @@ plugins.each do |plugin|
 end
 
 # read config
-config = YAML.load_file config_file
+configs = YAML.load_file config_file
 
 # parse config, merge defaults, add required data
-config['nodes'].each do |node, conf|
+configs['nodes'].each do |node, conf|
   vms[node] = {}
   vms[node] = config['default'].merge conf
   vms[node]['fqdn'] = format('%<role>s.%<domain>s', role: node, domain: vms[node]['domain'])
