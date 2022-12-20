@@ -4,14 +4,12 @@ require 'yaml'
 # Required Vagrant plugins
 plugins = [
   'hostmanager',
-  'vbguest',
+  # 'vbguest',
   'disksize',
 ]
 
 # Nodes configuration is defined in config.yaml
 config_file = File.join(__dir__, 'config.yaml')
-# mount path for repo on VMs
-code_dir = '/vagrant_linux_ha'
 # Initial vms hash
 vms = {}
 
@@ -41,23 +39,24 @@ config['nodes'].each do |node, conf|
 end
 
 # Vagrant configuration
-Vagrant.configure('2') do |config|
+Vagrant.configure('2') do |configs|
   # defaults for all vms
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = true
-  config.hostmanager.ignore_private_ip = false
-  config.hostmanager.include_offline = true
-  config.vm.synced_folder '../', code_dir, mount_options: ['ro']
+  configs.hostmanager.enabled = true
+  configs.hostmanager.manage_host = true
+  configs.hostmanager.ignore_private_ip = false
+  configs.hostmanager.include_offline = true
   # See https://github.com/mitchellh/vagrant/issues/1673
-  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+  configs.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    configs.vbguest.auto_update = false
+  end
 
   # config per vm
   vms.each do |node, settings|
-    config.vm.define settings['fqdn'] do |setting|
+    configs.vm.define settings['fqdn'] do |setting|
       setting.vm.box = settings['box']
       setting.vm.hostname = settings['fqdn']
       setting.vm.network :private_network, ip: settings['ip']
-      setting.vbguest.installer_options = { allow_kernel_upgrade: true } if settings['box'].start_with?('centos', 'almalinux')
       setting.vm.provision 'shell', path: 'scripts/vagrant-sethostname.sh', args: settings['fqdn'].to_s
       setting.hostmanager.aliases = settings['aliases']
       setting.vm.provider 'virtualbox' do |v|
