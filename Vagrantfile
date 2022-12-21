@@ -26,10 +26,10 @@ plugins.each do |plugin|
 end
 
 # read config
-configs = YAML.load_file config_file
+config = YAML.load_file config_file
 
 # parse config, merge defaults, add required data
-configs['nodes'].each do |node, conf|
+config['nodes'].each do |node, conf|
   vms[node] = {}
   vms[node] = config['default'].merge conf
   vms[node]['fqdn'] = format('%<role>s.%<domain>s', role: node, domain: vms[node]['domain'])
@@ -64,10 +64,12 @@ Vagrant.configure('2') do |configs|
         v.customize ['modifyvm', :id, '--name', settings['fqdn']]
         v.customize ['modifyvm', :id, '--cpus', settings['cpu'].to_s]
         v.customize ['modifyvm', :id, '--memory', settings['memory'].to_s]
-        unless File.exist?(file_to_disk)
-          v.customize [ "createmedium", "disk", "--filename", file_to_disk, "--format", "vmdk", "--size", 1024 * settings['additional_disk_size'] ]
+        if settings['additional_disk_size']
+          unless File.exist?(file_to_disk)
+            v.customize [ "createmedium", "disk", "--filename", file_to_disk, "--format", "vmdk", "--size", 1024 * settings['additional_disk_size'] ]
+          end
+          v.customize [ "storageattach", settings['fqdn'] , "--storagectl", "SATA Controller", "--port", "2", "--device", "0", "--type", "hdd", "--medium", file_to_disk]
         end
-        v.customize [ "storageattach", settings['fqdn'] , "--storagectl", "SATA Controller", "--port", "2", "--device", "0", "--type", "hdd", "--medium", file_to_disk]
       end
     end
   end
