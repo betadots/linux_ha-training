@@ -4,8 +4,7 @@ require 'yaml'
 # Required Vagrant plugins
 plugins = [
   'hostmanager',
-  # 'vbguest',
-  # 'disksize',
+  'vbguest',
 ]
 
 # Nodes configuration is defined in config.yaml
@@ -47,14 +46,18 @@ Vagrant.configure('2') do |configs|
   configs.hostmanager.include_offline = true
   # See https://github.com/mitchellh/vagrant/issues/1673
   configs.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
-  if Vagrant.has_plugin?("vagrant-vbguest")
-    configs.vbguest.auto_update = false
-  end
 
   # config per vm
   vms.each do |node, settings|
     configs.vm.define settings['fqdn'] do |setting|
       setting.vm.box = settings['box']
+      if settings['box'].start_with?('centos')
+        setting.vbguest.installer_options = { allow_kernel_upgrade: true }
+      else
+        if Vagrant.has_plugin?("vagrant-vbguest")
+          setting.vbguest.auto_update = false
+        end
+      end
       setting.vm.hostname = settings['fqdn']
       setting.vm.network :private_network, ip: settings['ip']
       setting.vm.provision 'shell', path: 'scripts/vagrant-sethostname.sh', args: settings['fqdn'].to_s

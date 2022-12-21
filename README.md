@@ -58,4 +58,22 @@ Tag 3:
 - HA in Diensten - Diskussion, Vorstellung
 - HA mit Containern - Diskussion, Vorstellung
 
+## Trainings Unterlagen holen
+
+Zuerst brauchen wir einen GIT Client. Mit `which git` oder `git --version` prüfen, ob GIT installiert ist.
+
+Wenn nicht: Je nach OS bitte installieren:
+
+- Debian: `sudo apt-get install git`
+- CentOS: `sudo yum install git`
+- SuSE: `sudo zypper in git-core`
+- Windows: `choco install git` # <- Erfordet [Chocolatey](https://chocolatey.org/)
+
+Nun das GitHub Repository auf die Workstation/das Trainingslaptop herunterladen:
+
+    git clone https://github.com/betadots/linux_ha-training
+    cd linux_ha-training
+
+Weiter geht es mit Teil1: [Vorbereitung](00_Vorbereitung)
+
 License: CC BY-NC-SA 4.0

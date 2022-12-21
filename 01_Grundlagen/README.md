@@ -6,7 +6,7 @@ Einführung in Linux Hochverfügbarkeit
 
 ## Grundlagen und Konzepte
 
-### Generelles
+### Was ist HA?
 
 Anfang: Heartbeat: <http://www.linux-ha.org/wiki/Main_Page>
 
