@@ -85,7 +85,7 @@ Einrichten des Masquerading:
     iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.101 -j MASQUERADE
     iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
-Installation: `dnf install ipvsadm`
+Installation: `dnf install -y ipvsadm`
 
 Config file anlegen:
 
@@ -127,5 +127,10 @@ Auf server3: `dnf install -y nginx; systemctl start nginx`
 Jetzt kann auf den Webservice zugegriffen werden:
 
     curl http://10.100.10.101
+
+Für den nächsten Punkt müssen die VMs neu instantiiert werden:
+
+    vagrant destroy -f
+    vagrant up
 
 Weiter geht es mit [HAproxy](../03_HAproxy)
