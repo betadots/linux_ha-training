@@ -128,9 +128,9 @@ Jetzt kann auf den Webservice zugegriffen werden:
 
     curl http://10.100.10.101
 
-Für den nächsten Punkt müssen die VMs neu instantiiert werden:
+Für den nächsten Punkt mussen die LB VM neu instantiiert werden:
 
-    vagrant destroy -f
-    vagrant up
+    vagrant destroy -f server1.betadots.training
+    vagrant up server1.betadots.training
 
 Weiter geht es mit [HAproxy](../03_HAproxy)
