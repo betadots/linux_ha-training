@@ -1,3 +1,3 @@
 # OCFS2
 
-Weiter geht es mit [GlusterFS](../09_GLusterFS)
+Weiter geht es mit [GlusterFS](../09_GlusterFS)
