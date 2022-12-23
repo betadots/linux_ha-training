@@ -88,16 +88,18 @@ Dies erzeugt 3 VMs
 
 Danach Login:
 
-    vagrant ssh server1.betadots.training
+    vagrant ssh server<n>.betadots.training
     sudo -i
 
-Wenn man am Abend das Laptop auschalten will, muss man die VM vorher sichern (nicht runterfahren!):
+## VM sichern
 
-    vagrant suspend server1.betadots.training
+Wenn man am Abend das Laptop auschalten will, muss man die VMs vorher sichern (nicht runterfahren!):
 
-Am naechsten Tag kann die VM wieder geladen werden:
+    vagrant suspend
 
-    vagrant resume server1.betadots.training
+Am naechsten Tag können die VMs wieder geladen werden:
+
+    vagrant resume
 
 ## VM pruefen
 
@@ -107,8 +109,10 @@ Achtung: Namensauflösung innerhalb der VM.
 
 In `/etc/hosts` sicherstellen, dass folgender Eintrag entfernt wird:
 
-    127.0.1.1 server1.betadots.training server1
+    127.0.1.1 server<n>.betadots.training server<n>
 
 Der folgender Eintrag muss vorhanden sein:
 
-    10.100.10.101 server1.betadots.training server1
+    10.100.10.10<n> server<n>.betadots.training server<n>
+
+Weiter geht es mit [Grundlagen](../01_Grundlagen)

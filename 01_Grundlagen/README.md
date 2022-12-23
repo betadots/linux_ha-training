@@ -69,4 +69,6 @@ Anforderungen:
 Corosync: Cluster Engine
 Pacemaker: Cluster Resource Manager
 
+Weiter geht es mit [LVS](../02_LVS)
+
 License: CC BY-NC-SA 4.0

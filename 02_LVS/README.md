@@ -31,10 +31,18 @@ Analyse der Real Server auf Verfügbarkeit.
 ## Betriebsarten
 
 LVS kann in 3 unterschiedlichen Betriebsarten genutzt werden.
-Im Training werden wir NAT/Full-NAT nutzen, da dies die einfachste Methode ist und mit minimalen Änderungen an den Real-Servern auskommt.
 
-|Modus       | Anpassungen Real Server? | Umfang der Anpassungen          |
-|------------|--------------------------|---------------------------------|
-|NAT/Full-Nat| nur bei NAT              | Setzen des Virtual Server als Default Gateway|
-|TUN         | ja                       | Deaktivierung ARP Replies, Aktivierung IP-Tunneling|
-|Direct Routing| ja                     | Deaktivierung von ARP-Replies, zusätzliches Interface nötig |
+1. Virtual Server mit NAT (VS/NAT)
+1. Virtual Serve rmit Tunneling (VS/TUN)
+1. Virtual Server mit Direct Routing (VS/DR)
+
+Im Training werden wir NAT nutzen, da dies die einfachste Methode ist und mit minimalen Änderungen an den Real-Servern auskommt.
+
+|Modus          | VS/NAT        | VS/TUN     | VS/DR         |
+|---------------|---------------|------------|---------------|
+|server         | any           | tunneling  | no ARP device |
+|server network | private       | LAN/WAN    | LAN           |
+|server number  | low (10-20)   | high       | high          |
+|server gateway | load balancer | own router | own router    |
+
+Weiter geht es mit [HAproxy](../03_HAproxy)

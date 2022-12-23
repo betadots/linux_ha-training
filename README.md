@@ -74,6 +74,6 @@ Nun das GitHub Repository auf die Workstation/das Trainingslaptop herunterladen:
     git clone https://github.com/betadots/linux_ha-training
     cd linux_ha-training
 
-Weiter geht es mit Teil1: [Vorbereitung](00_Vorbereitung)
+Weiter geht es mit [Vorbereitung](00_Vorbereitung)
 
 License: CC BY-NC-SA 4.0
