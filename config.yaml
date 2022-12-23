@@ -9,10 +9,13 @@ default:
 # List of nodes shown in vagrant status
 nodes:
   server1:
-    ip: 10.100.10.101
+    ip1: 10.100.10.101
+    ip2: 172.16.120.10
     additional_disk_size: 10 # size in GB
   server2:
-    ip: 10.100.10.102
+    ip1: 10.100.10.102
+    ip2: 172.16.120.11
     additional_disk_size: 10 # size in GB
   server3:
-    ip: 10.100.10.103
+    ip1: 10.100.10.103
+    ip2: 172.16.120.12

@@ -33,6 +33,7 @@ Je nach Anwendung kommen unterschiedliche Verteilmethoden zum Einsatz. Der Klass
 Loadbalancer Verteilmethoden:
 
 1. round-robin
+1. gewichtetes round-robin
 1. least connection
 1. Last-basiertes Verteilen
 

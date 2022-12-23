@@ -69,4 +69,63 @@ Hier hat man keinen Tunneling Overhead, aber alle Systeme müssen im gleichen ph
 
 Hinweis: wir machen NAT.
 
+Einrichten des NAT:
+
+    echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
+    echo 'net.ipv4.vs.conntrack = 1' | tee -a /etc/sysctl.conf
+    sysctl -p
+
+Überprüfen:
+
+    sysctl net.ipv4.ip_forward
+    sysctl net.ipv4.vs.conntrack
+
+Einrichten des Masquerading:
+
+    iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.101 -j MASQUERADE
+    iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
+
+Installation: `dnf install ipvsadm`
+
+Config file anlegen:
+
+    touch /etc/sysconfig/ipvsadm
+    systemctl enable --now ipvsadm
+    systemctl status ipvsadm
+
+`ipvsadm` ist ein Kommando:
+
+    ipvsadm --help
+    ipvsadm v1.31 2019/12/24 (compiled with popt and IPVS v1.2.1)
+    Usage:
+      ipvsadm -A|E virtual-service [-s scheduler] [-p [timeout]] [-M netmask] [--pe persistence_engine] [-b sched-flags]
+      ipvsadm -D virtual-service
+      ipvsadm -C
+      ipvsadm -R
+      ipvsadm -S [-n]
+      ....
+
+Einrichten des Load-Balancers:
+
+    ipvsadm -A -t 10.100.10.101:80 -s rr
+    ipvsadm -a -t 10.100.10.101:80 -r 172.16.120.11:80 -m
+    ipvsadm -a -t 10.100.10.101:80 -r 172.16.120.12:80 -m
+
+Einsehen der Konfiguration:
+
+    ipvsadm -L
+    IP Virtual Server version 1.2.1 (size=4096)
+    Prot LocalAddress:Port Scheduler Flags
+      -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+    TCP  server1.betadots.training:ht rr
+      -> server2.betadots.training:ht Masq    1      0          0
+      -> server3.betadots.training:ht Masq    1      0          0
+
+Auf server2: `dnf install -y httpd; systemctl start httpd`
+Auf server3: `dnf install -y nginx; systemctl start nginx`
+
+Jetzt kann auf den Webservice zugegriffen werden:
+
+    curl http://10.100.10.101
+
 Weiter geht es mit [HAproxy](../03_HAproxy)
