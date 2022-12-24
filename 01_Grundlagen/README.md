@@ -32,9 +32,16 @@ Je nach Anwendung kommen unterschiedliche Verteilmethoden zum Einsatz. Der Klass
 
 Loadbalancer Verteilmethoden:
 
-1. round-robin
-1. gewichtetes round-robin
-1. least connection
+1. round-robin (rr)
+1. gewichtetes round-robin (wrr)
+1. least connection (lc)
+1. gewichtete least connection (wlc)
+1. locality based least connection (lblc)
+1. lblc with replication (lblcr)
+1. destination hashing (dh)
+1. source hashing (sh)
+1. shortest expected delay (sed)
+1. never queue (nq)
 1. Last-basiertes Verteilen
 
 ## Tools

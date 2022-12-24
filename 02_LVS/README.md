@@ -24,10 +24,6 @@ Die virtuelle IP auf dem Virtual Server, über die die Real Server erreichbar si
 Linux Tool zum Management von LVS (Aktivierung, Verwaltung und Überwachung).
 Kann auch als Daemon laufen, um mehrere LVS Instanzen in einem CLusterverbund zu betreiben.
 
-### ldirector
-
-Analyse der Real Server auf Verfügbarkeit.
-
 ## Betriebsarten
 
 LVS kann in 3 unterschiedlichen Betriebsarten genutzt werden.
@@ -36,7 +32,7 @@ LVS kann in 3 unterschiedlichen Betriebsarten genutzt werden.
 1. Virtual Serve rmit Tunneling (VS/TUN)
 1. Virtual Server mit Direct Routing (VS/DR)
 
-Im Training werden wir NAT nutzen, da dies die einfachste Methode ist und mit minimalen Änderungen an den Real-Servern auskommt.
+Im Training werden wir NAT und DR nutzen, da dies die einfachste Methode ist und mit minimalen Änderungen an den Real-Servern auskommt.
 
 |Modus          | VS/NAT        | VS/TUN     | VS/DR         |
 |---------------|---------------|------------|---------------|
@@ -45,7 +41,7 @@ Im Training werden wir NAT nutzen, da dies die einfachste Methode ist und mit mi
 |server number  | low (10-20)   | high       | high          |
 |server gateway | load balancer | own router | own router    |
 
-### NAT
+### Network Address Translation
 
 NAT hat Limitierungen in Hinsicht aus die Skalierung, da der gesamte Traffik über den Load-Balancer geht.
 
@@ -67,7 +63,7 @@ Hier hat man keinen Tunneling Overhead, aber alle Systeme müssen im gleichen ph
 
 ## Einrichtung
 
-Hinweis: wir machen NAT.
+### NAT
 
 Einrichten des NAT:
 
@@ -128,9 +124,74 @@ Jetzt kann auf den Webservice zugegriffen werden:
 
     curl http://10.100.10.101
 
-Für den nächsten Punkt mussen die LB VM neu instantiiert werden:
+Für den nächsten Punkt muss die LB VM neu instantiiert werden:
 
     vagrant destroy -f server1.betadots.training
     vagrant up server1.betadots.training
+
+### Direct Routing
+
+Installation: `dnf install -y ipvsadm`
+
+Config file anlegen:
+
+    touch /etc/sysconfig/ipvsadm
+    systemctl enable --now ipvsadm
+    systemctl status ipvsadm
+
+Einrichten des Load-Balancers:
+
+    ipvsadm -A -t 10.100.10.101:80 -s rr
+    ipvsadm -a -t 10.100.10.101:80 -r 10.100.10.102:80 -g
+    ipvsadm -a -t 10.100.10.101:80 -r 10.100.10.103:80 -g
+
+Einsehen der Konfiguration:
+
+    ipvsadm -L
+
+Auf server2
+
+Installation Webserver: `dnf install -y httpd; systemctl start httpd`
+
+Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
+
+    iptables -t nat -A PREROUTING -p tcp -d 10.100.10.101 --dport 80 -j REDIRECT
+
+Lösung 2: arptables und VIP
+
+    dnf install -y iptables-arptables
+    arptables -A IN -d 10.100.10.101 -j DROP
+    arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.102
+
+    ip addr add 10.100.10.101 dev lo:0
+
+Auf server3:
+
+Installation Webserver `dnf install -y nginx; systemctl start nginx`
+
+Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
+
+    iptables -t nat -A PREROUTING -p tcp -d 10.100.10.101 --dport 80 -j REDIRECT
+
+Lösung 2: arptables und VIP
+
+    dnf install -y iptables-arptables
+    arptables -A IN -d 10.100.10.101 -j DROP
+    arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.103
+
+    ip addr add 10.100.10.101 dev lo:0
+
+Fehleranalyse
+
+    tcpdump  -ni enp0s9 port 80
+
+Jetzt kann auf den Webservice zugegriffen werden:
+
+    curl http://10.100.10.101
+
+Für den nächsten Punkt müssen alle VMs neu instantiiert werden:
+
+    vagrant destroy -f
+    vagrant up
 
 Weiter geht es mit [HAproxy](../03_HAproxy)
