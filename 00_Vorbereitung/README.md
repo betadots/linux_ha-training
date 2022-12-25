@@ -46,16 +46,16 @@ Falls die Plugins schon installiert waren, kann man prüfen, ob Aktualisierungen
 
 ## Vagrant Box
 
-Vagrant arbeitet mit vorbereiteten VM Images. Wir muessen das CentOS/8 Image lokal ablegen:
+Vagrant arbeitet mit vorbereiteten VM Images. Wir muessen das Debian Bullseye64 Image lokal ablegen:
 
-    vagrant box add almalinux/8 --provider virtualbox
+    vagrant box add debian/bullseye64 --provider virtualbox
 
-    ==> box: Loading metadata for box 'almalinux/8'
-        box: URL: https://vagrantcloud.com/almalinux/8
-    ==> box: Adding box 'almalinux8' (vxxx.y) for provider: virtualbox
-        box: Downloading: https://vagrantcloud.com/centos/boxes/almalinux8/versions/xxxx.y/providers/virtualbox.box
+    ==> box: Loading metadata for box 'debian/bullseye64'
+        box: URL: https://vagrantcloud.com/debian/bullseye64
+    ==> box: Adding box 'debian/bullseye64' (vxxx.y) for provider: virtualbox
+        box: Downloading: https://vagrantcloud.com/centos/boxes/bullseye64/versions/xxxx.y/providers/virtualbox.box
         box: Download redirected to host: cloud.centos.org
-    ==> box: Successfully added box 'almalinux/8' (vxxxx.y) for 'virtualbox'!
+    ==> box: Successfully added box 'debian/bullseye64' (vxxxx.y) for 'virtualbox'!
 
 ## VirtualBox Vorbereitung
 

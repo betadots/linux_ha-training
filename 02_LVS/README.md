@@ -81,13 +81,19 @@ Einrichten des Masquerading:
     iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.101 -j MASQUERADE
     iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
-Installation: `dnf install -y ipvsadm`
+Installation: `apt install -y ipvsadm`
+
+#### Almalinux
+
+`dnf install -y ipvsdam`
 
 Config file anlegen:
 
     touch /etc/sysconfig/ipvsadm
     systemctl enable --now ipvsadm
     systemctl status ipvsadm
+
+#### ipvsadm
 
 `ipvsadm` ist ein Kommando:
 
@@ -117,8 +123,8 @@ Einsehen der Konfiguration:
       -> server2.betadots.training:ht Masq    1      0          0
       -> server3.betadots.training:ht Masq    1      0          0
 
-Auf server2: `dnf install -y httpd; systemctl start httpd`
-Auf server3: `dnf install -y nginx; systemctl start nginx`
+Auf server2: `apt install -y apache2; systemctl start apache2`
+Auf server3: `apt install -y nginx; systemctl start nginx`
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
@@ -131,13 +137,7 @@ Für den nächsten Punkt muss die LB VM neu instantiiert werden:
 
 ### Direct Routing
 
-Installation: `dnf install -y ipvsadm`
-
-Config file anlegen:
-
-    touch /etc/sysconfig/ipvsadm
-    systemctl enable --now ipvsadm
-    systemctl status ipvsadm
+Installation: `apt install -y ipvsadm`
 
 Einrichten des Load-Balancers:
 
@@ -151,7 +151,7 @@ Einsehen der Konfiguration:
 
 Auf server2
 
-Installation Webserver: `dnf install -y httpd; systemctl start httpd`
+Installation Webserver: `apt install -y apache2; systemctl start apache2`
 
 Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
@@ -159,7 +159,10 @@ Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
 Lösung 2: arptables und VIP
 
+    # almalinux:
     dnf install -y iptables-arptables
+    # debian
+    apt install -y arptables
     arptables -A IN -d 10.100.10.101 -j DROP
     arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.102
 
@@ -167,7 +170,7 @@ Lösung 2: arptables und VIP
 
 Auf server3:
 
-Installation Webserver `dnf install -y nginx; systemctl start nginx`
+Installation Webserver `apt install -y nginx; systemctl start nginx`
 
 Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
@@ -175,7 +178,10 @@ Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
 Lösung 2: arptables und VIP
 
+    # almalinux
     dnf install -y iptables-arptables
+    # debian
+    apt install -y arptables
     arptables -A IN -d 10.100.10.101 -j DROP
     arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.103
 

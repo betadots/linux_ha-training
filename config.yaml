@@ -3,7 +3,7 @@
 default:
   memory: 1612 # MB or RAM to assign - CentOS Installer needs at leas 1512 MB
   cpu: 1 # Number of vCPU to assign to the VM
-  box: almalinux/8 # Box used for the VM
+  box: debian/bullseye64 # Box used for the VM
   domain: betadots.training # Name of DNS domain for the created machines
 
 # List of nodes shown in vagrant status
