@@ -115,4 +115,8 @@ Der folgender Eintrag muss vorhanden sein:
 
     10.100.10.10<n> server<n>.betadots.training server<n>
 
+## Almalinux
+
+AlmaLinux Erweiterungen <https://wiki.almalinux.org/repos/CentOS.html>
+
 Weiter geht es mit [Grundlagen](../01_Grundlagen)
