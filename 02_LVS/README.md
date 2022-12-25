@@ -81,6 +81,8 @@ Einrichten des Masquerading:
     iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.101 -j MASQUERADE
     iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
+#### Debian
+
 Installation: `apt install -y ipvsadm`
 
 #### Almalinux
@@ -123,8 +125,8 @@ Einsehen der Konfiguration:
       -> server2.betadots.training:ht Masq    1      0          0
       -> server3.betadots.training:ht Masq    1      0          0
 
-Auf server2: `apt install -y apache2; systemctl start apache2`
-Auf server3: `apt install -y nginx; systemctl start nginx`
+Auf server2: `apt update; apt install -y apache2; systemctl start apache2`
+Auf server3: `apt update; apt install -y nginx; systemctl start nginx`
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
@@ -134,10 +136,12 @@ Für den nächsten Punkt muss die LB VM neu instantiiert werden:
 
     vagrant destroy -f server1.betadots.training
     vagrant up server1.betadots.training
+    vagrant ssh server1.betadots.training
+    sudo -i
 
 ### Direct Routing
 
-Installation: `apt install -y ipvsadm`
+Installation: `apt update; apt install -y ipvsadm`
 
 Einrichten des Load-Balancers:
 
@@ -151,45 +155,39 @@ Einsehen der Konfiguration:
 
 Auf server2
 
-Installation Webserver: `apt install -y apache2; systemctl start apache2`
-
 Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
     iptables -t nat -A PREROUTING -p tcp -d 10.100.10.101 --dport 80 -j REDIRECT
 
-Lösung 2: arptables und VIP
+Lösung 2: arptables und VIP (WIP)
 
-    # almalinux:
-    dnf install -y iptables-arptables
-    # debian
+    apt update
     apt install -y arptables
     arptables -A IN -d 10.100.10.101 -j DROP
     arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.102
 
-    ip addr add 10.100.10.101 dev lo:0
+    ip addr add 10.100.10.101 dev lo label lo:0
 
 Auf server3:
 
-Installation Webserver `apt install -y nginx; systemctl start nginx`
+Installation Webserver `apt update; apt install -y nginx; systemctl start nginx`
 
 Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
     iptables -t nat -A PREROUTING -p tcp -d 10.100.10.101 --dport 80 -j REDIRECT
 
-Lösung 2: arptables und VIP
+Lösung 2: arptables und VIP (WIP)
 
-    # almalinux
-    dnf install -y iptables-arptables
-    # debian
+    apt update
     apt install -y arptables
-    arptables -A IN -d 10.100.10.101 -j DROP
-    arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.103
+    arptables -A INPUT -d 10.100.10.101 -j DROP
+    arptables -A OUTPUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.103
 
-    ip addr add 10.100.10.101 dev lo:0
+    ip addr add 10.100.10.101/32 dev lo label lo:0
 
 Fehleranalyse
 
-    tcpdump  -ni enp0s9 port 80
+    tcpdump  -ni eth2 port 80
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
