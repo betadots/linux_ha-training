@@ -114,8 +114,8 @@ Almalinux `dnf install -y ipvsdam`
 Einrichten des Load-Balancers:
 
     ipvsadm -A -t 10.100.10.11:80 -s rr
-    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.22:80 -m
-    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.23:80 -m
+    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.15:80 -m
+    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.16:80 -m
 
 Einsehen der Konfiguration:
 
@@ -150,8 +150,8 @@ Installation: `apt update; apt install -y ipvsadm`
 Einrichten des Load-Balancers:
 
     ipvsadm -A -t 10.100.10.11:80 -s rr
-    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.110:80 -g
-    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.111:80 -g
+    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.15:80 -g
+    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.16:80 -g
 
 Einsehen der Konfiguration:
 
@@ -170,7 +170,7 @@ Lösung 2: arptables und VIP (WIP)
     apt update
     apt install -y arptables
     arptables -A IN -d 10.100.10.11 -j DROP
-    arptables -A OUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.111
+    arptables -A OUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.15
 
     ip addr add 10.100.10.11 dev lo label lo:0
 
@@ -187,7 +187,7 @@ Lösung 2: arptables und VIP (WIP)
     apt update
     apt install -y arptables
     arptables -A INPUT -d 10.100.10.11 -j DROP
-    arptables -A OUTPUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.111
+    arptables -A OUTPUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.16
 
     ip addr add 10.100.10.11/32 dev lo label lo:0
 
