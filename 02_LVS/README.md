@@ -63,33 +63,35 @@ Hier hat man keinen Tunneling Overhead, aber alle Systeme müssen im gleichen ph
 
 ## Einrichtung
 
+Login lb1
+
+    vagrant ssh lb1.betadots.training
+    sudo -i
+
 ### NAT
 
-Einrichten des NAT:
+#### Einrichten des NAT
 
     echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
     echo 'net.ipv4.vs.conntrack = 1' | tee -a /etc/sysctl.conf
     sysctl -p
 
-Überprüfen:
+Überprüfen
 
     sysctl net.ipv4.ip_forward
     sysctl net.ipv4.vs.conntrack
 
-Einrichten des Masquerading:
+#### Einrichten des Masquerading
 
-    iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.101 -j MASQUERADE
+    iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.11 -j MASQUERADE
     iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
-#### Debian
+#### Installation
 
-Installation: `apt install -y ipvsadm`
+Debian `apt install -y ipvsadm`
+Almalinux `dnf install -y ipvsdam`
 
-#### Almalinux
-
-`dnf install -y ipvsdam`
-
-Config file anlegen:
+#### Config file anlegen (nur Almalinux)
 
     touch /etc/sysconfig/ipvsadm
     systemctl enable --now ipvsadm
@@ -111,9 +113,9 @@ Config file anlegen:
 
 Einrichten des Load-Balancers:
 
-    ipvsadm -A -t 10.100.10.101:80 -s rr
-    ipvsadm -a -t 10.100.10.101:80 -r 172.16.120.11:80 -m
-    ipvsadm -a -t 10.100.10.101:80 -r 172.16.120.12:80 -m
+    ipvsadm -A -t 10.100.10.11:80 -s rr
+    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.22:80 -m
+    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.23:80 -m
 
 Einsehen der Konfiguration:
 
@@ -121,69 +123,73 @@ Einsehen der Konfiguration:
     IP Virtual Server version 1.2.1 (size=4096)
     Prot LocalAddress:Port Scheduler Flags
       -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
-    TCP  server1.betadots.training:ht rr
-      -> server2.betadots.training:ht Masq    1      0          0
-      -> server3.betadots.training:ht Masq    1      0          0
+    TCP  lb1.betadots.training:ht rr
+      -> web1.betadots.training:ht Masq    1      0          0
+      -> web2.betadots.training:ht Masq    1      0          0
 
-Auf server2: `apt update; apt install -y apache2; systemctl start apache2`
-Auf server3: `apt update; apt install -y nginx; systemctl start nginx`
+Auf web1: `apt update; apt install -y apache2; systemctl start apache2`
+Auf web2: `apt update; apt install -y nginx; systemctl start nginx`
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
-    curl http://10.100.10.101
+    curl http://10.100.10.11
 
 Für den nächsten Punkt muss die LB VM neu instantiiert werden:
 
-    vagrant destroy -f server1.betadots.training
-    vagrant up server1.betadots.training
-    vagrant ssh server1.betadots.training
+    vagrant destroy -f lb1.betadots.training
+    vagrant up lb1.betadots.training
+    vagrant ssh lb1.betadots.training
     sudo -i
 
 ### Direct Routing
+
+#### Loadbalancer
 
 Installation: `apt update; apt install -y ipvsadm`
 
 Einrichten des Load-Balancers:
 
-    ipvsadm -A -t 10.100.10.101:80 -s rr
-    ipvsadm -a -t 10.100.10.101:80 -r 10.100.10.102:80 -g
-    ipvsadm -a -t 10.100.10.101:80 -r 10.100.10.103:80 -g
+    ipvsadm -A -t 10.100.10.11:80 -s rr
+    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.110:80 -g
+    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.111:80 -g
 
 Einsehen der Konfiguration:
 
     ipvsadm -L
 
-Auf server2
+#### Webserver
+
+Auf web1
 
 Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
-    iptables -t nat -A PREROUTING -p tcp -d 10.100.10.101 --dport 80 -j REDIRECT
+    iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 
 Lösung 2: arptables und VIP (WIP)
 
     apt update
     apt install -y arptables
-    arptables -A IN -d 10.100.10.101 -j DROP
-    arptables -A OUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.102
+    arptables -A IN -d 10.100.10.11 -j DROP
+    arptables -A OUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.111
 
-    ip addr add 10.100.10.101 dev lo label lo:0
+    ip addr add 10.100.10.11 dev lo label lo:0
 
-Auf server3:
+Auf web2
 
 Installation Webserver `apt update; apt install -y nginx; systemctl start nginx`
 
 Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
 
-    iptables -t nat -A PREROUTING -p tcp -d 10.100.10.101 --dport 80 -j REDIRECT
+    iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 
 Lösung 2: arptables und VIP (WIP)
 
     apt update
     apt install -y arptables
-    arptables -A INPUT -d 10.100.10.101 -j DROP
-    arptables -A OUTPUT -s 10.100.10.101 -j mangle --mangle-ip-s 10.100.10.103
+    arptables -A INPUT -d 10.100.10.11 -j DROP
+    arptables -A OUTPUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.111
 
-    ip addr add 10.100.10.101/32 dev lo label lo:0
+    ip addr add 10.100.10.11/32 dev lo label lo:0
 
 Fehleranalyse
 
@@ -191,11 +197,10 @@ Fehleranalyse
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
-    curl http://10.100.10.101
+    curl http://10.100.10.11
 
 Für den nächsten Punkt müssen alle VMs neu instantiiert werden:
 
     vagrant destroy -f
-    vagrant up
 
 Weiter geht es mit [HAproxy](../03_HAproxy)

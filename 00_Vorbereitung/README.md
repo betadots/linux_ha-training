@@ -78,17 +78,11 @@ Ausserdem werden die VirtualBox Guest Extensions benötigt.
 
 Jetzt können die VM instantiiert werden:
 
-    vagrant up
-
-Dies erzeugt 3 VMs
-
-- server1
-- server2
-- server3
+    vagrant up lb1.betadots.training web1.betadots.training web2.betadots.training
 
 Danach Login:
 
-    vagrant ssh server<n>.betadots.training
+    vagrant ssh <server>.betadots.training
     sudo -i
 
 ## VM sichern
@@ -110,10 +104,6 @@ Achtung: Namensauflösung innerhalb der VM.
 In `/etc/hosts` sicherstellen, dass folgender Eintrag entfernt wird:
 
     127.0.1.1 server<n>.betadots.training server<n>
-
-Der folgender Eintrag muss vorhanden sein:
-
-    10.100.10.10<n> server<n>.betadots.training server<n>
 
 ## Almalinux
 
