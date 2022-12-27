@@ -25,7 +25,11 @@ Konfiguration
      default_backend static
 
     backend static
+     balance roundrobin
+     option httpchk HEAD /
      server srv1 172.16.120.15:80 check
      server srv2 172.16.120.16:80 check
+
+Stoppen des load balancers: `vagrant destroy -f lb1.betadots.training`
 
 Weiter geht es mit [Nginx](../04_Nginx)

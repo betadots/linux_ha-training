@@ -63,6 +63,10 @@ Hier hat man keinen Tunneling Overhead, aber alle Systeme müssen im gleichen ph
 
 ## Einrichtung
 
+Hochfahren der VMs:
+
+    vagrant up lb1.betadots.training web1.betadots.training web2.betadots.training
+
 Login lb1
 
     vagrant ssh lb1.betadots.training
@@ -76,6 +80,8 @@ Login lb1
     echo 'net.ipv4.vs.conntrack = 1' | tee -a /etc/sysctl.conf
     sysctl -p
 
+Fehlemerldung wegen conntrack:
+
 Überprüfen
 
     sysctl net.ipv4.ip_forward
@@ -86,9 +92,11 @@ Login lb1
     iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.11 -j MASQUERADE
     iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
+Jetzt ist das conntrack module geladen: `sysctl -p`
+
 #### Installation
 
-Debian `apt install -y ipvsadm`
+Debian `apt update; apt install -y ipvsadm`
 Almalinux `dnf install -y ipvsdam`
 
 #### Config file anlegen (nur Almalinux)
@@ -161,35 +169,17 @@ Einsehen der Konfiguration:
 
 Auf web1
 
-Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
+iptables um Anfragen gegen VIP anzunehmen:
 
     iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
-
-Lösung 2: arptables und VIP (WIP)
-
-    apt update
-    apt install -y arptables
-    arptables -A IN -d 10.100.10.11 -j DROP
-    arptables -A OUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.15
-
-    ip addr add 10.100.10.11 dev lo label lo:0
 
 Auf web2
 
 Installation Webserver `apt update; apt install -y nginx; systemctl start nginx`
 
-Lösung 1: iptables um Anfragen gegen VIP anzunehmen:
+iptables um Anfragen gegen VIP anzunehmen:
 
     iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
-
-Lösung 2: arptables und VIP (WIP)
-
-    apt update
-    apt install -y arptables
-    arptables -A INPUT -d 10.100.10.11 -j DROP
-    arptables -A OUTPUT -s 10.100.10.11 -j mangle --mangle-ip-s 10.100.10.16
-
-    ip addr add 10.100.10.11/32 dev lo label lo:0
 
 Fehleranalyse
 
@@ -198,6 +188,49 @@ Fehleranalyse
 Jetzt kann auf den Webservice zugegriffen werden:
 
     curl http://10.100.10.11
+
+Deaktivieren eines Webservers. Was sehen wir?
+
+ipvsadm flushen: ipvsadm -F
+
+Lösung: ldirectord
+
+    apt install -y ldirectord
+    cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/ldirectord.cf
+
+Konfiguration anpassen
+
+    # Sample for an http virtual service
+    virtual=10.100.10.11:80
+        servicename=Web Site
+        comment=Test load balanced web site
+        real=172.16.120.15:80 masq
+        real=172.16.120.16:80 masq
+        #fallback=127.0.0.1:80 gate
+        service=http
+        scheduler=rr
+        #persistent=600
+        #netmask=255.255.255.255
+        protocol=tcp
+        checktype=negotiate
+        checkport=80
+        request="/"
+        #receive="install"
+        #virtualhost=www.x.y.z
+
+Service starten: `systemctl start ldirectord`
+
+Web Server stoppen, `ipvsadm -L`
+
+Aktivieren maintenance:
+
+    # /etc/ha.d/ldirectord.cf
+    # main section !!!
+    maintenancedir=/etc/ha.d/web/
+
+Node deaktivieren:
+
+    touch /etc/ha.d/web/172.16.120.15:80
 
 Für den nächsten Punkt müssen alle VMs neu instantiiert werden:
 

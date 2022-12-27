@@ -76,9 +76,9 @@ Ausserdem werden die VirtualBox Guest Extensions benötigt.
 
 ## VM starten
 
-Jetzt können die VM instantiiert werden:
+Jetzt können die VMs instantiiert werden:
 
-    vagrant up lb1.betadots.training web1.betadots.training web2.betadots.training
+    vagrant up <server>.betadots.training <server>.betadots.training ...
 
 Danach Login:
 
