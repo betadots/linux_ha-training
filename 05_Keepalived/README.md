@@ -13,4 +13,8 @@ Nginx
 
 Gleiche Config wie gerade eben erzeugen.
 
+Beide webserver: Installation von keepalived
+
+    apt install keepalived
+
 Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../06_Clusterlabs)
