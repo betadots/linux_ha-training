@@ -18,6 +18,45 @@ VRRP3 hat IPv6 support, aber die authentifizierung wurde wieder entfernt.
 
 Keepalived nutzt VRRP2.
 
+Kernel Komponenten:
+
+- LVS Framework (getsockopts und setsockopts)
+- Netfilter Framework (IPVS für NAT und Masquerading)
+- Netlink Interface (VRRP)
+- Multicast (VRRP Advertisements)
+
+Elemente:
+
+- Control Plane
+- Scheduler
+- Memory Management
+- Core Components
+- Checkers
+- VRRP Stack
+- System Call
+- Netlink Reflector
+- SMTP
+- IPVS Wrapper
+- IPVS
+- Netlink
+- Syslog
+
+Healthcheck Framework
+
+- TCP_CHECK
+- HTTP_GET
+- SSL_GET
+- MISC_CHECK
+
+Failover (VRRP) Framework
+
+Bei ARP Problemen:
+
+    net.ipv4.conf.all.arp_ignore = 1
+    net.ipv4.conf.all.arp_announce = 1
+    net.ipv4.conf.all.arp_filter = 0
+    net.ipv4.conf.eth0.arp_filter = 1 (eth0 ist das Interface der VRRP Instanz)
+
 Starten des 2ten Load-Balancer
 
     vagrant up lb2.betadots.training
