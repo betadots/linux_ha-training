@@ -14,17 +14,15 @@ nodes:
   lb2:
     ip1: 10.100.10.12
     ip2: 172.16.120.12
-  pcs1:
+  app1:
     ip1: 10.100.10.13
     ip2: 172.16.120.13
-  pcs2:
+    additional_disk_size: 10 # size in GB
+  app2:
     ip1: 10.100.10.14
     ip2: 172.16.120.14
-  web1:
+    additional_disk_size: 10 # size in GB
+  app3:
     ip1: 10.100.10.15
     ip2: 172.16.120.15
-    additional_disk_size: 10 # size in GB
-  web2:
-    ip1: 10.100.10.16
-    ip2: 172.16.120.16
     additional_disk_size: 10 # size in GB

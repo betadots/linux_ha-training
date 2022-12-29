@@ -1,6 +1,6 @@
 # HAproxy
 
-    vagrant up lb1.betadots.training web1.betadots.training web2.betadots.training
+    vagrant up lb1.betadots.training app1.betadots.training app2.betadots.training
     vagrant ssh lb1.betadots.training
     sudo -i
 
@@ -27,8 +27,8 @@ Konfiguration
     backend static
      balance roundrobin
      option httpchk HEAD /
-     server srv1 172.16.120.15:80 check
-     server srv2 172.16.120.16:80 check
+     server srv1 172.16.120.13:80 check
+     server srv2 172.16.120.14:80 check
 
 TODO: API
 

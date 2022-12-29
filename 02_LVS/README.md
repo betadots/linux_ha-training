@@ -65,7 +65,7 @@ Hier hat man keinen Tunneling Overhead, aber alle Systeme müssen im gleichen ph
 
 Hochfahren der VMs:
 
-    vagrant up lb1.betadots.training web1.betadots.training web2.betadots.training
+    vagrant up lb1.betadots.training app1.betadots.training app2.betadots.training
 
 Login lb1
 
@@ -122,8 +122,8 @@ Almalinux `dnf install -y ipvsdam`
 Einrichten des Load-Balancers:
 
     ipvsadm -A -t 10.100.10.11:80 -s rr
-    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.15:80 -m
-    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.16:80 -m
+    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.13:80 -m
+    ipvsadm -a -t 10.100.10.11:80 -r 172.16.120.14:80 -m
 
 Einsehen der Konfiguration:
 
@@ -132,11 +132,11 @@ Einsehen der Konfiguration:
     Prot LocalAddress:Port Scheduler Flags
       -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
     TCP  lb1.betadots.training:ht rr
-      -> web1.betadots.training:ht Masq    1      0          0
-      -> web2.betadots.training:ht Masq    1      0          0
+      -> app1.betadots.training:ht Masq    1      0          0
+      -> app2.betadots.training:ht Masq    1      0          0
 
-Auf web1: `apt update; apt install -y apache2; systemctl start apache2`
-Auf web2: `apt update; apt install -y nginx; systemctl start nginx`
+Auf app1: `apt update; apt install -y apache2; systemctl start apache2`
+Auf app2: `apt update; apt install -y nginx; systemctl start nginx`
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
@@ -158,8 +158,8 @@ Installation: `apt update; apt install -y ipvsadm`
 Einrichten des Load-Balancers:
 
     ipvsadm -A -t 10.100.10.11:80 -s rr
-    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.15:80 -g
-    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.16:80 -g
+    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.13:80 -g
+    ipvsadm -a -t 10.100.10.11:80 -r 10.100.10.14:80 -g
 
 Einsehen der Konfiguration:
 
@@ -167,13 +167,13 @@ Einsehen der Konfiguration:
 
 #### Webserver
 
-Auf web1
+Auf app1
 
 iptables um Anfragen gegen VIP anzunehmen:
 
     iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 
-Auf web2
+Auf app2
 
 Installation Webserver `apt update; apt install -y nginx; systemctl start nginx`
 
@@ -204,8 +204,8 @@ Konfiguration anpassen
     virtual=10.100.10.11:80
         servicename=Web Site
         comment=Test load balanced web site
-        real=172.16.120.15:80 masq
-        real=172.16.120.16:80 masq
+        real=172.16.120.13:80 masq
+        real=172.16.120.14:80 masq
         #fallback=127.0.0.1:80 gate
         service=http
         scheduler=rr
@@ -230,7 +230,7 @@ Aktivieren maintenance:
 
 Node deaktivieren:
 
-    touch /etc/ha.d/web/172.16.120.15:80
+    touch /etc/ha.d/web/172.16.120.13:80
 
 Für den nächsten Punkt müssen alle VMs neu instantiiert werden:
 

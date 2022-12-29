@@ -11,8 +11,8 @@ Config
 
     # /etc/nginx/site-enabled/default
     upstream backend {
-        server 172.16.120.15;
-        server 172.16.120.16;
+        server 172.16.120.13;
+        server 172.16.120.14;
     }
     server {
         listen 80;
