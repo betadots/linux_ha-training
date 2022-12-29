@@ -70,7 +70,7 @@ VRRP Konfiguration
         priority 150
         advert_int 1
         virtual_ipaddress {
-            10.0.0.254
+            10.100.10.254
         }
     }
 
@@ -96,7 +96,7 @@ Mit der Anweisung `notify_master` kann man dies automatisieren:
         priority 150
         advert_int 1
         virtual_ipaddress {
-            10.0.0.254
+            10.100.10.254
         }
         notify_master "/usr/local/bin/vmac_tweak.sh vrrp.250"
     }
@@ -129,5 +129,17 @@ Keepalived kennt die folgenden Konfigurationen:
 - vrrp_instance
 
 Siehe auch: <https://keepalived.readthedocs.io/en/latest/configuration_synopsis.html>
+
+Beispiele liegen in `/usr/share/doc/keepalived/samples`
+
+Kommando Optionen
+
+    -f, --use-file=<config file>
+    -P, --vrrp # Nur VRRP, ohne LVS
+    -C, --check # Config check
+    -V, --dont-release-vrrp # VRRP config beim stoppen bestehen lassen
+    -I, --dont-release-ipvs # LVS config beim stoppen bestehen lassen
+    -d, --dump-conf # Config anzeigen
+    -x, --snmp # SNP aktivieren
 
 Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../06_Clusterlabs)
