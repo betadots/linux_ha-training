@@ -2,7 +2,7 @@
 
 Installation
 
-    apt install -y drdb
+    apt install -y drdb-utils
 
 SELinux deaktivieren
 
