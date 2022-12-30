@@ -44,7 +44,7 @@ Loadbalancer Verteilmethoden:
 1. never queue (nq)
 1. Last-basiertes Verteilen
 
-## Lokales Hardware HA
+## Hardware HA
 
 - Strom: Redundante Netzteile
 - Disk: RAID (HW oder SW)
