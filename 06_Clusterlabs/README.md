@@ -136,4 +136,68 @@ Resources schwenken
 
     pcs cluster stop <fqdn1>
 
+Verhindern von Resource Relocation nach Wiederverfügbarkeit
+
+    pcs resource defaults
+    pcs resource defaults update resource-stickiness=100
+
+Installation Apache
+
+    apt install -y apache2
+
+Einrichtung server-status (wird vom apache Resource Agent benötigt)
+
+    # /etc/apache2/conf.d/status.conf
+    <Location /server-status>
+      SetHandler server-status
+      Require local
+    </Location>
+
+Cluster Resource hinzufügen
+
+    pcs resource create WebSite ocf:heartbeat:apache  \
+      configfile=/etc/apache2/conf/apache2.conf \
+      statusurl="http://localhost/server-status" \
+      op monitor interval=1min
+
+Timeout setzen
+
+    pcs resource op defaults
+    pcs resource op defaults update timeout=240s
+
+Cluster Status prüfen
+
+    pcs status
+
+Webserver prüfen
+
+    wget -O - http://localhost/server-status
+
+Resourcen Abhängigkeiten
+
+    pcs constraint colocation add WebSite with ClusterIP INFINITY
+    pcs constraint
+    pcs status
+
+Resourcen Reihenfolgen
+
+    pcs constraint order ClusterIP then WebSite
+    pcs constraint
+
+Cluster Node Präferenz
+
+    pcs constraint location WebSite prefers <fqdn>=50
+    pcs constraint
+    pcs status
+
+Placement Scores
+
+    crm_simulate -sL
+
+Resourcen Switchen
+
+    pcs resource move WebSite <fqdn>
+    pcs constraint
+    pcs status
+
 Weiter geht es mit [DRBD](../07_DRBD)
