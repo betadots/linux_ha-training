@@ -44,6 +44,12 @@ Loadbalancer Verteilmethoden:
 1. never queue (nq)
 1. Last-basiertes Verteilen
 
+## Lokales Hardware HA
+
+- Strom: Redundante Netzteile
+- Disk: RAID (HW oder SW)
+- Netzwerk: Bonding (Active-Passive oder Active-Active)
+
 ## Tools
 
 Anfang: Heartbeat: <http://www.linux-ha.org/wiki/Main_Page>
