@@ -16,14 +16,14 @@ Disks
 
 2. Festplatte mit LVM
 
-    pv create /dev/sdb
-    vg create <name> <disk>
-    lvcreate --name drbd-demo --size 512M <vg name>
+    pvcreate /dev/sdb
+    vgcreate vg_training /dev/sdb
+    lvcreate --name lv_training --size 512M vg_training
 
 DRBD konfigurieren
 
-    # /etc/drbd.d/wwwdata.res
-    resource "wwwdata" {
+    # /etc/drbd.d/drbd_training.res
+    resource "drbd_lv_training" {
       device minor 1;
       meta-disk internal;
       net {
@@ -36,30 +36,30 @@ DRBD konfigurieren
         fence-peer "/usr/lib/drbd/crm-fence-peer.9.sh";
         unfence-peer "/usr/lib/drbd/crm-unfence-peer.9.sh";
       }
-      on "fqdn1" {
-        disk "/dev/<vg name>/drbd-demo";
+      on "app1" {
+        disk "/dev/vg_training/lv_training";
         node-id 0;
       }
-      on "fqdn2" {
-        disk "/dev/<vg name>/drbd-demo";
+      on "app2" {
+        disk "/dev/vg_training/lv_training";
         node-id 1;
       }
       connection {
-        host "fqdn1" address <ip1>:7789;
-        host "fqdn2" address <ip2>:7789;
+        host "app1" address 172.16.120.13:7789;
+        host "app2" address 172.16.120.14:7789;
       }
     }
 
 DRBD Device initialisieren
 
-    drbdadm create-md wwwdata
+    drbdadm create-md drbd_lv_training
     modprobe drbd
-    drbdadm up wwwdata
+    drbdadm up drbd_lv_training
     drbdadm status
 
 Initiale Synchronisation erzwingen
 
-    drbdadm primary --force wwwdata
+    drbdadm primary --force drbd_lv_training
     drbdadm status
 
 File System erzeugen
