@@ -52,7 +52,26 @@ Loadbalancer Verteilmethoden:
 
 ## Tools
 
-Anfang: Heartbeat: <http://www.linux-ha.org/wiki/Main_Page>
+Veraltet: Heartbeat: <http://www.linux-ha.org/wiki/Main_Page>
+
+Load Balancing:
+
+- Linux Virtual Server
+- LDirector
+- HAproxy
+- Nginx/Apache
+
+Cluster:
+
+- Keepalived
+- Pacemaker/Corosync
+
+Storage:
+
+- DRBD
+- OCFS2
+- GlusterFS
+- Ceph
 
 Anforderungen:
 
@@ -63,25 +82,6 @@ Anforderungen:
 - Namensauflösung
 - Firewalling
 - Selinux
-
-## Storage
-
-### DRBD
-
-### Ceph
-
-### GFS2
-
-### GlusterFS
-
-## Applikationen
-
-### Keepalived
-
-### Pacemaker/Corosync
-
-Corosync: Cluster Engine
-Pacemaker: Cluster Resource Manager
 
 Weiter geht es mit [LVS](../02_LVS)
 
