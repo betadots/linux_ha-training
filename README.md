@@ -43,10 +43,10 @@ Tag 1:
 - LVS (Ivpsadm und Ldirectord)
 - HAproxy
 - Nginx
-- Keepalived
 
 Tag 2:
 
+- Keepalived
 - Pacemaker/Corosync
 - DRBD
 - OCFS2
