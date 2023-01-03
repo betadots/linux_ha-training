@@ -14,6 +14,20 @@ Dabei stehen unterschiedliche Verfahren zur Verfügung.
 1. Ausfallsicherheit
 1. Lastverteilung
 
+#### Ausfallsicherheit/Hardware
+
+Sicherstellen, dass ein Hardwareausfall möglich ist
+
+1. Netzwerk
+1. Festplatten
+
+Für den Ausfall einer Netzwerkkarte kommt Bonding zum Einsatz.
+Für den Ausfall einer Festplatte wird RAID genutzt.
+
+Bei RAID besteht die Möglichkeit das RAID in Hardware oder Software zu realisieren.
+Für Hardware RAID wird ein RAID Controller benötigt, der üblicherweise im BIOS konfiguriert wird.
+Unter Linux kann man RAID auch in Software abbilden (MD - Multiple Devices).
+
 #### Ausfallsicherheit/Cluster
 
 Bei einem Cluster hat man einen Verbund von Systemen, die sich gegenseitig überwachen. Hier gibt es entweder das Active-Passive- oder das Active-Active-Modell.

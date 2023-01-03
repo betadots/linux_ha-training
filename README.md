@@ -7,6 +7,8 @@ Einführung in Linux Hochverfügbarkeit
 ## Themen
 
 - Grundlagen und Konzepte
+  - Bonding
+  - RAID
 - Lastverteilung - Loadbalancing
   - Linux Virtual Server (LVS) - Ipvsadm + Ldirector <https://www.linux-magazin.de/ausgaben/2018/07/load-balancer/>
   - HAProxy <https://linuxhandbook.com/load-balancing-setup/>
