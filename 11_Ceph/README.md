@@ -50,4 +50,4 @@
 
     apt install -y ceph-base
 
-Weiter geht es mit [HA in Diensten](../11_HA_in_Services)
+Weiter geht es mit [HA in Diensten](../12_HA_in_Services)

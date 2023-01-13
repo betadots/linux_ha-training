@@ -42,19 +42,21 @@ Einführung in Linux Hochverfügbarkeit
 Tag 1:
 
 - Grundlagen und Konzepte
+- Bonding
+- RAID
 - LVS (Ivpsadm und Ldirectord)
 - HAproxy
-- Nginx
 
 Tag 2:
 
+- Nginx
 - Keepalived
 - Pacemaker/Corosync
-- DRBD
-- OCFS2
 
 Tag 3:
 
+- DRBD
+- OCFS2
 - GlusterFS
 - Ceph - Vorstellung
 - HA in Diensten - Diskussion, Vorstellung

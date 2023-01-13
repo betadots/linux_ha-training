@@ -97,6 +97,6 @@ Anforderungen:
 - Firewalling
 - Selinux
 
-Weiter geht es mit [LVS](../02_LVS)
+Weiter geht es mit [Local HA](../02_Local_HA)
 
 License: CC BY-NC-SA 4.0

@@ -30,4 +30,4 @@
 
     mkfs.ocfs2 -L "ocfs2" /dev/sdb
 
-Weiter geht es mit [GlusterFS](../09_GlusterFS)
+Weiter geht es mit [GlusterFS](../10_GlusterFS)

@@ -130,4 +130,4 @@ Cluster switch
     pcs node unstandby <fqdn2>
     pcs status
 
-Weiter geht es mit [OCFS2](../08_OCFS2)
+Weiter geht es mit [OCFS2](../09_OCFS2)

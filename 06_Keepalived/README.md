@@ -142,4 +142,4 @@ Kommando Optionen
     -d, --dump-conf # Config anzeigen
     -x, --snmp # SNP aktivieren
 
-Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../06_Clusterlabs)
+Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../07_Clusterlabs)

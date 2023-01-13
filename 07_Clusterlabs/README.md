@@ -200,4 +200,4 @@ Resourcen Switchen
     pcs constraint
     pcs status
 
-Weiter geht es mit [DRBD](../07_DRBD)
+Weiter geht es mit [DRBD](../08_DRBD)

@@ -34,4 +34,4 @@ TODO: API
 
 Stoppen des load balancers: `vagrant destroy -f lb1.betadots.training`
 
-Weiter geht es mit [Nginx](../04_Nginx)
+Weiter geht es mit [Nginx](../05_Nginx)

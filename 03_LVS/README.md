@@ -236,4 +236,4 @@ Für den nächsten Punkt müssen alle VMs neu instantiiert werden:
 
     vagrant destroy -f
 
-Weiter geht es mit [HAproxy](../03_HAproxy)
+Weiter geht es mit [HAproxy](../04_HAproxy)
