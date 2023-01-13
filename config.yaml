@@ -3,26 +3,28 @@
 default:
   memory: 1612 # MB or RAM to assign - CentOS Installer needs at leas 1512 MB
   cpu: 1 # Number of vCPU to assign to the VM
-  box: debian/bullseye64 # Box used for the VM
-  domain: betadots.training # Name of DNS domain for the created machines
+  box: 'debian/bullseye64' # Box used for the VM
+  domain: 'betadots.training' # Name of DNS domain for the created machines
 
 # List of nodes shown in vagrant status
 nodes:
   lb1:
     ip1: 10.100.10.11
-    ip2: 172.16.120.11
+    ip2: 10.100.10.12
+    additional_disk_size: 10 # size in GB
   lb2:
-    ip1: 10.100.10.12
-    ip2: 172.16.120.12
+    ip1: 10.100.10.21
+    ip2: 10.100.10.22
+    additional_disk_size: 10 # size in GB
   app1:
-    ip1: 10.100.10.13
-    ip2: 172.16.120.13
+    ip1: 10.100.10.31
+    ip2: 10.100.10.32
     additional_disk_size: 10 # size in GB
   app2:
-    ip1: 10.100.10.14
-    ip2: 172.16.120.14
+    ip1: 10.100.10.41
+    ip2: 10.100.10.42
     additional_disk_size: 10 # size in GB
   app3:
-    ip1: 10.100.10.15
-    ip2: 172.16.120.15
+    ip1: 10.100.10.51
+    ip2: 10.100.10.52
     additional_disk_size: 10 # size in GB

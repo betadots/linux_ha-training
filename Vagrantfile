@@ -59,20 +59,25 @@ Vagrant.configure('2') do |configs|
         end
       end
       setting.vm.hostname = settings['fqdn']
-      setting.vm.network :private_network, ip: settings['ip1']
-      setting.vm.network :private_network, ip: settings['ip2']
+      setting.vm.network :private_network, ip: settings['ip1'], auto_config: false
+      setting.vm.network :private_network, ip: settings['ip2'], auto_config: false
       setting.vm.provision 'shell', path: 'scripts/vagrant-sethostname.sh', args: settings['fqdn'].to_s
       setting.hostmanager.aliases = settings['aliases']
       setting.vm.provider 'virtualbox' do |v|
-        file_to_disk = "disks/#{settings['fqdn']}-second_disk.vmdk"
+        file_to_disk = [
+          "disks/#{settings['fqdn']}-first_disk.vmdk",
+          "disks/#{settings['fqdn']}-second_disk.vmdk"
+        ]
         v.customize ['modifyvm', :id, '--name', settings['fqdn']]
         v.customize ['modifyvm', :id, '--cpus', settings['cpu'].to_s]
         v.customize ['modifyvm', :id, '--memory', settings['memory'].to_s]
         if settings['additional_disk_size']
-          unless File.exist?(file_to_disk)
-            v.customize [ "createmedium", "disk", "--filename", file_to_disk, "--format", "vmdk", "--size", 1024 * settings['additional_disk_size'] ]
+          file_to_disk.each_with_index do |disk, index|
+            unless File.exist?(disk)
+              v.customize [ "createmedium", "disk", "--filename", disk, "--format", "vmdk", "--size", 1024 * settings['additional_disk_size'] ]
+            end
+            v.customize [ "storageattach", settings['fqdn'] , "--storagectl", "SATA Controller", "--port", "#{index+1}", "--device", "0", "--type", "hdd", "--medium", disk]
           end
-          v.customize [ "storageattach", settings['fqdn'] , "--storagectl", "SATA Controller", "--port", "2", "--device", "0", "--type", "hdd", "--medium", file_to_disk]
         end
       end
     end
