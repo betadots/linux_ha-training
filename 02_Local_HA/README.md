@@ -12,7 +12,7 @@ apt install -y ifenslave
 
 ## Netzwerk Bonding
 
-Prüfen, ob Interfaces Down sind:
+Interfaces für Bonding down setzen:
 
     ifdown eth1
     ifdown eth2
@@ -31,25 +31,37 @@ Bonding Config erzeugen:
         bond-downdelay 200
         bond-updelay 200
 
-Installation webserver
+Bonding starten:
+
+    ifup bond0
+
+Installation webserver:
 
     apt install -y nginx
 
 Laptop:
 
-    watch -n 0.5 'curl 10.100.10.11'
+    watch -n 0.5 'curl -I --silent 10.100.10.11'
 
-Deaktivieren eth1
+Deaktivieren eth1 am Laptop:
 
     VBoxManage controlvm lb1.betadots.training setlinkstate2 off
 
-Anschauen in der VM
+Anschauen in der VM:
 
     ip a
 
 Reaktiveren eth1
 
     VBoxManage controlvm lb1.betadots.training setlinkstate2 on
+
+Journal lesen in der VM:
+
+    journalctl --no-pager --lines 50
+
+Bond Interface status:
+
+    cat /proc/net/bonding/bond0
 
 ## RAID (Software)
 
