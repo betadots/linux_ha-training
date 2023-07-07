@@ -3,11 +3,14 @@
 1. Netzwerk Bonding
 1. Disk RAID
 
-    vagrant up lb1.betadots.training
-    apt update
-    apt install -y ifenslave
+```
+vagrant up lb1.betadots.training
+sudo -i
+apt update
+apt install -y ifenslave
+```
 
-## Bonding
+## Netzwerk Bonding
 
 Prüfen, ob Interfaces Down sind:
 
