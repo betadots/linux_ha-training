@@ -29,7 +29,7 @@ Kann auch als Daemon laufen, um mehrere LVS Instanzen in einem CLusterverbund zu
 LVS kann in 3 unterschiedlichen Betriebsarten genutzt werden.
 
 1. Virtual Server mit NAT (VS/NAT)
-1. Virtual Serve rmit Tunneling (VS/TUN)
+1. Virtual Server mit Tunneling (VS/TUN)
 1. Virtual Server mit Direct Routing (VS/DR)
 
 Im Training werden wir NAT und DR nutzen, da dies die einfachste Methode ist und mit minimalen Änderungen an den Real-Servern auskommt.
