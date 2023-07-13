@@ -50,6 +50,12 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+Webserver installieren
+
+```shell
+apt install -y apache2
+```
+
 App2:
 
 ```shell
@@ -68,6 +74,12 @@ iface eth2 inet static
     address 172.16.120.14
     netmask 255.255.255.0
     network 172.16.120.0
+```
+
+Webserver installieren
+
+```shell
+apt install -y nginx
 ```
 
 Load-Balancer Anwendung
@@ -101,6 +113,18 @@ backend static
     server srv1 172.16.120.13:80 check
     server srv2 172.16.120.14:80 check
 ```
+
+Neustart HAproxy
+
+```shell
+systemctl restart haproxy
+```
+
+Web Interface:
+
+`http://10.100.10.11:8404/stats`
+
+Stoppen eines Webservers. Was sehen wir?
 
 TODO: API
 
