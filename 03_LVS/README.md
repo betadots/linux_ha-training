@@ -230,7 +230,7 @@ systemctl start nginx
 Jetzt kann auf den Webservice zugegriffen werden:
 
 ```shell
-curl http://10.100.10.11
+watch -c 1 'curl http://10.100.10.11'
 ```
 
 Für den nächsten Punkt muss die LB VM neu instantiiert werden:
@@ -239,7 +239,6 @@ Für den nächsten Punkt muss die LB VM neu instantiiert werden:
 vagrant destroy -f lb1.betadots.training
 vagrant up lb1.betadots.training
 vagrant ssh lb1.betadots.training
-sudo -i
 sudo -i
 apt update
 apt install -y locales-all
@@ -267,6 +266,7 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+
 ### Direct Routing
 
 #### Loadbalancer
@@ -289,13 +289,41 @@ ipvsadm -L
 
 #### Webserver
 
-Auf app1: iptables um Anfragen gegen VIP anzunehmen:
+Auf app1:
+
+Netzwerk konfigurieren
+
+```shell
+# zu /etc/network/interfaces hinzufügen
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.13
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+```
+
+iptables um Anfragen gegen VIP anzunehmen:
 
 ```shell
 iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 ```
 
-Auf app2: iptables um Anfragen gegen VIP anzunehmen:
+Auf app2:
+
+Netzwerk konfigurieren
+
+```shell
+# zu /etc/network/interfaces hinzufügen
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.14
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+```
+
+iptables um Anfragen gegen VIP anzunehmen:
 
 ```shell
 iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
@@ -304,6 +332,7 @@ iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 Fehleranalyse
 
 ```shell
+apt install -y tcpdump
 tcpdump  -ni eth2 port 80
 ```
 
@@ -322,8 +351,31 @@ Lösung: ldirectord
 lb1:
 
 ```shell
+echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
+echo 'net.ipv4.vs.conntrack = 1' | tee -a /etc/sysctl.conf
+sysctl -p
+```
+
+Fehlemerldung wegen conntrack:
+
+Überprüfen
+
+```shell
+sysctl net.ipv4.ip_forward
+sysctl net.ipv4.vs.conntrack
+```
+
+#### Einrichten des Masquerading
+
+```shell
+iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.11 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
+```
+
+```shell
 apt install -y ldirectord
-cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/ldirectord.cf
+mkidr /etc/ha.d/conf
+cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/conf/ldirectord.cf
 ```
 
 Konfiguration anpassen

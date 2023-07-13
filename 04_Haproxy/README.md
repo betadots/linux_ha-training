@@ -4,9 +4,75 @@
 vagrant up lb1.betadots.training app1.betadots.training app2.betadots.training
 vagrant ssh lb1.betadots.training
 sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+```
+
+Netzwerk Konfigurieren
+
+lb1:
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.11
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.11
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+App1:
+
+```shell
+vagrant ssh app1.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+```
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.13
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+App2:
+
+```shell
+vagrant ssh app2.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+```
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.14
+    netmask 255.255.255.0
+    network 172.16.120.0
 ```
 
 Load-Balancer Anwendung
+
+lb1:
 
 ```shell
 apt update; apt install -y haproxy
