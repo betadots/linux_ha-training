@@ -74,6 +74,11 @@ Login lb1
 ```shell
 vagrant ssh lb1.betadots.training
 sudo -i
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
 ```
 
 ### NAT
@@ -169,6 +174,11 @@ vagrant destroy -f lb1.betadots.training
 vagrant up lb1.betadots.training
 vagrant ssh lb1.betadots.training
 sudo -i
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
 ```
 
 ### Direct Routing

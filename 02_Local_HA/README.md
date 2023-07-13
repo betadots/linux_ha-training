@@ -3,14 +3,18 @@
 1. Netzwerk Bonding
 1. Disk RAID
 
+## Netzwerk Bonding
+
 ```shell
 vagrant up lb1.betadots.training
+vagrant ssh lb1.betadots.training
 sudo -i
 apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
 apt install -y ifenslave
 ```
-
-## Netzwerk Bonding
 
 Interfaces für Bonding down setzen:
 
@@ -35,7 +39,13 @@ iface bond0 inet static
     bond-updelay 200
 ```
 
-Bonding starten:
+Ist das Interface Up?
+
+```shell
+ip a
+```
+
+Wenn nein: Bonding starten:
 
 ```shell
 ifup bond0
@@ -82,7 +92,78 @@ Bond Interface status:
 ```shell
 cat /proc/net/bonding/bond0
 ```
+
 ## RAID (Software)
+
+Prüfen Festplatten:
+
+```shell
+fdisk -l /dev/sdb
+fdisk -l /dev/sdc
+```
+
+Anlegen des RAID:
+
+```shell
+apt install -y mdadm
+mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+
+mdadm: Note: this array has metadata at the start and
+    may not be suitable as a boot device.  If you plan to
+    store '/boot' on this device please ensure that
+    your boot-loader understands md/v1.x metadata, or use
+    --metadata=0.90
+Continue creating array? y
+```
+
+Prüfen MD Device
+
+```shell
+cat /proc/mdstat
+mdadm -D /dev/md0
+```
+
+Anlegen FS und mount
+
+```shell
+apt install -y xfsprogs
+mkfs.xfs /dev/md0
+mount /dev/md0 /mnt
+```
+
+Anpassen Sync Rate
+
+```shell
+dd if=/dev/urandom of=/mnt/testfile-1-1G bs=1G count=1 oflag=dsync
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 3.87684 s, 277 MB/s
+```
+
+2 Sysctl Parameter:
+
+```shell
+cat /proc/sys/dev/raid/speed_limit_max
+200000
+cat /proc/sys/dev/raid/speed_limit_min
+1000
+echo 100000 > /proc/sys/dev/raid/speed_limit_min
+```
+
+Löschen eines RAID Devices:
+
+```shell
+umount /mnt
+mdadm --stop /dev/md0
+mdadm --zero-superblock /dev/sda
+mdadm --zero-superblock /dev/sdb
+```
+
+Umgebung aufräumen
+
+```shell
+vagrant destroy -f
+```
 
 Weiter geht es mit [LVS](../03_LVS)
 

@@ -32,7 +32,7 @@ Windows:
 choco install vagrant
 ```
 
-Falls Vargant vorher schon installiert war, muss man die Plugins reaktivieren: `vagrant plugin expunge --reinstall`
+Falls Vagrant vorher schon installiert war, muss man die Plugins reaktivieren: `vagrant plugin expunge --reinstall`
 
 ## Vagrant Erweiterungen
 
@@ -70,6 +70,12 @@ vagrant box add debian/bullseye64 --provider virtualbox
     ==> box: Successfully added box 'debian/bullseye64' (vxxxx.y) for 'virtualbox'!
 ```
 
+## Virtualbox
+
+Als Virtualisierungsbackend wird [Virtualbox](https://virtualbox.org) genutzt.
+Bitte prüfen, ob Virtualbox installiert ist, notfalls nachinstallieren.
+Ausserdem werden die VirtualBox Guest Extensions benötigt.
+
 ## VirtualBox Vorbereitung
 
 Unbedingt pruefen, ob die Host-only Netzwerke einen DHCP Server aktiviert haben !!
@@ -81,17 +87,12 @@ Wenn im DHCP Server Daten hinterlegt sind, diese bitte durch '0.0.0.0' ersetzen 
 
 Wenn man den DHCP Server deaktivieren musste, muss das Linux System neu gestartet werden! Unbedingt neu starten!
 
-## Virtualbox
-
-Als Virtualisierungsbackend wird [Virtualbox](https://virtualbox.org) genutzt.
-Bitte prüfen, ob Virtualbox installiert ist, notfalls nachinstallieren.
-Ausserdem werden die VirtualBox Guest Extensions benötigt.
-
 ## VM starten
 
 Jetzt können die VMs instantiiert werden:
 
 ```shell
+vagrant status
 vagrant up <server>.betadots.training <server>.betadots.training ...
 ```
 
