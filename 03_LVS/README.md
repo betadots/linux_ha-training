@@ -74,11 +74,52 @@ Login lb1
 ```shell
 vagrant ssh lb1.betadots.training
 sudo -i
-sudo -i
 apt update
 apt install -y locales-all
 unset LC_CTYPE
 export LANG=en_US.UTF-8
+```
+
+Netzwerk Konfigurieren
+
+lb1:
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.11
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.11
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+app1:
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.13
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+app2:
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.14
+    netmask 255.255.255.0
+    network 172.16.120.0
 ```
 
 ### NAT
@@ -117,7 +158,7 @@ Almalinux `dnf install -y ipvsdam`
 #### Config file anlegen (nur Almalinux)
 
 ```shell
-touch /etc/sysconfig/ipvsadm
+# Nur RedHat Systeme: touch /etc/sysconfig/ipvsadm
 systemctl enable --now ipvsadm
 systemctl status ipvsadm
 ```
@@ -158,8 +199,33 @@ TCP  lb1.betadots.training:ht rr
   -> app2.betadots.training:ht Masq    1      0          0
 ```
 
-Auf app1: `apt update; apt install -y apache2; systemctl start apache2`
-Auf app2: `apt update; apt install -y nginx; systemctl start nginx`
+Installation Webserver
+
+App1:
+
+```shell
+vagrant ssh app1.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+apt install -y apache2
+systemctl start apache2
+```
+
+App2:
+
+```shell
+vagrant ssh app2.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+apt install -y nginx
+systemctl start nginx
+```
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
@@ -179,6 +245,26 @@ apt update
 apt install -y locales-all
 unset LC_CTYPE
 export LANG=en_US.UTF-8
+```
+
+Netzwerk Konfigurieren
+
+lb1:
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.11
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.11
+    netmask 255.255.255.0
+    network 172.16.120.0
 ```
 
 ### Direct Routing
@@ -203,19 +289,13 @@ ipvsadm -L
 
 #### Webserver
 
-Auf app1
-
-iptables um Anfragen gegen VIP anzunehmen:
+Auf app1: iptables um Anfragen gegen VIP anzunehmen:
 
 ```shell
 iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 ```
 
-Auf app2
-
-Installation Webserver `apt update; apt install -y nginx; systemctl start nginx`
-
-iptables um Anfragen gegen VIP anzunehmen:
+Auf app2: iptables um Anfragen gegen VIP anzunehmen:
 
 ```shell
 iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
@@ -238,6 +318,8 @@ Deaktivieren eines Webservers. Was sehen wir?
 ipvsadm flushen: `ipvsadm -F`
 
 Lösung: ldirectord
+
+lb1:
 
 ```shell
 apt install -y ldirectord
