@@ -52,27 +52,31 @@ Failover (VRRP) Framework
 
 Bei ARP Problemen:
 
-    net.ipv4.conf.all.arp_ignore = 1
-    net.ipv4.conf.all.arp_announce = 1
-    net.ipv4.conf.all.arp_filter = 0
-    net.ipv4.conf.eth0.arp_filter = 1 (eth0 ist das Interface der VRRP Instanz)
+```shell
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 1
+net.ipv4.conf.all.arp_filter = 0
+net.ipv4.conf.eth0.arp_filter = 1 (eth0 ist das Interface der VRRP Instanz)
+```
 
 VMAC Interface
 
 VRRP Konfiguration
 
-    vrrp_instance instance1 {
-        state BACKUP
-        interface eth0
-        virtual_router_id 250
-        use_vmac
-            vmac_xmit_base         # Transmit VRRP adverts over physical interface
-        priority 150
-        advert_int 1
-        virtual_ipaddress {
-            10.100.10.254
-        }
+```shell
+vrrp_instance instance1 {
+    state BACKUP
+    interface eth0
+    virtual_router_id 250
+    use_vmac
+        vmac_xmit_base         # Transmit VRRP adverts over physical interface
+    priority 150
+    advert_int 1
+    virtual_ipaddress {
+        10.100.10.254
     }
+}
+```
 
 Durch die Anweisung `use_vmac` wird ein macvaln Interface mit dem Namen vrrp.<virtual_router_id> erzeugt. Hier also: vrrp.250
 Alternativ kann man den Namen des Interfaces explizit setzen:
@@ -102,6 +106,8 @@ Mit der Anweisung `notify_master` kann man dies automatisieren:
     }
 
 Das Loadbalancing folgt den Möglichkeiten von LVS.
+
+## Lab
 
 Starten des 2ten Load-Balancer
 
