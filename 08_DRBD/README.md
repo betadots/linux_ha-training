@@ -131,3 +131,5 @@ Cluster switch
     pcs status
 
 Weiter geht es mit [OCFS2](../09_OCFS2)
+
+License: CC BY-NC-SA 4.0

@@ -50,4 +50,8 @@
 
     apt install -y ceph-base
 
+Für Ceph gibt es ein [eigenes Training](https://www.linuxhotel.de/course/ceph-de/).
+
 Weiter geht es mit [HA in Diensten](../12_HA_in_Services)
+
+License: CC BY-NC-SA 4.0

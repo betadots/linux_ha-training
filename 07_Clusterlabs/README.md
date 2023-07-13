@@ -201,3 +201,5 @@ Resourcen Switchen
     pcs status
 
 Weiter geht es mit [DRBD](../08_DRBD)
+
+License: CC BY-NC-SA 4.0

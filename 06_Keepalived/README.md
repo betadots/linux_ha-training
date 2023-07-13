@@ -143,3 +143,5 @@ Kommando Optionen
     -x, --snmp # SNP aktivieren
 
 Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../07_Clusterlabs)
+
+License: CC BY-NC-SA 4.0

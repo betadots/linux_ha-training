@@ -5,24 +5,32 @@
 Bitte eine aktuelle Version von Vagrant installieren: [https://developer.hashicorp.com/vagrant/downloads](https://developer.hashicorp.com/vagrant/downloads)
 Achtung: wenn Vagrant schon installiert ist, dann unbedingt pruefen, ob die Version aktuell ist!
 
-    which vagrant
-    vagrant --version
+```shell
+which vagrant
+vagrant --version
+```
 
 Debian:
 
-    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-    sudo apt update && sudo apt install vagrant
+```shell
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install vagrant
+```
 
 CentOS:
 
-    sudo yum install -y yum-utils
-    sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-    sudo yum -y install vagrant
+```shell
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo yum -y install vagrant
+```
 
 Windows:
 
-    choco install vagrant
+```shell
+choco install vagrant
+```
 
 Falls Vargant vorher schon installiert war, muss man die Plugins reaktivieren: `vagrant plugin expunge --reinstall`
 
@@ -37,25 +45,30 @@ Das Hostmanager Plugin erzeugt auf dem Trainings Laptop Einträge in /etc/hosts,
 
 Das VBGuest Plugin installiert automatisch die VirtualBox Guest Extensions in einer VM, damit wir dieses GIT Repository als ein Volume in die VM mounten können.
 
-    vagrant plugin install vagrant-hostmanager
-    vagrant plugin install vagrant-vbguest
+```shell
+vagrant plugin install vagrant-hostmanager
+vagrant plugin install vagrant-vbguest
+```
 
 Falls die Plugins schon installiert waren, kann man prüfen, ob Aktualisierungen vorliegen:
 
-    vagrant plugin update
+```shell
+vagrant plugin update
+```
 
 ## Vagrant Box
 
 Vagrant arbeitet mit vorbereiteten VM Images. Wir muessen das Debian Bullseye64 Image lokal ablegen:
 
-    vagrant box add debian/bullseye64 --provider virtualbox
-
+```shell
+vagrant box add debian/bullseye64 --provider virtualbox
     ==> box: Loading metadata for box 'debian/bullseye64'
         box: URL: https://vagrantcloud.com/debian/bullseye64
     ==> box: Adding box 'debian/bullseye64' (vxxx.y) for provider: virtualbox
         box: Downloading: https://vagrantcloud.com/centos/boxes/bullseye64/versions/xxxx.y/providers/virtualbox.box
         box: Download redirected to host: cloud.centos.org
     ==> box: Successfully added box 'debian/bullseye64' (vxxxx.y) for 'virtualbox'!
+```
 
 ## VirtualBox Vorbereitung
 
@@ -78,22 +91,30 @@ Ausserdem werden die VirtualBox Guest Extensions benötigt.
 
 Jetzt können die VMs instantiiert werden:
 
-    vagrant up <server>.betadots.training <server>.betadots.training ...
+```shell
+vagrant up <server>.betadots.training <server>.betadots.training ...
+```
 
 Danach Login:
 
-    vagrant ssh <server>.betadots.training
-    sudo -i
+```shell
+vagrant ssh <server>.betadots.training
+sudo -i
+```
 
 ## VM sichern
 
 Wenn man am Abend das Laptop auschalten will, muss man die VMs vorher sichern (nicht runterfahren!):
 
-    vagrant suspend
+```shell
+vagrant suspend
+```
 
 Am naechsten Tag können die VMs wieder geladen werden:
 
-    vagrant resume
+```shell
+vagrant resume
+```
 
 ## VM pruefen
 
@@ -103,10 +124,8 @@ Achtung: Namensauflösung innerhalb der VM.
 
 In `/etc/hosts` sicherstellen, dass folgender Eintrag entfernt wird:
 
-    127.0.1.1 server<n>.betadots.training server<n>
-
-## Almalinux
-
-AlmaLinux Erweiterungen <https://wiki.almalinux.org/repos/CentOS.html>
+```shell
+127.0.1.1 server<n>.betadots.training server<n>
+```
 
 Weiter geht es mit [Grundlagen](../01_Grundlagen)

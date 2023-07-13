@@ -16,13 +16,10 @@ Einführung in Linux Hochverfügbarkeit
 - Hochverfürbarkeit
   - Keepalived
   - Pacemaker/Corosync <https://clusterlabs.org/> <https://clusterlabs.org/pacemaker/doc/2.1/Clusters_from_Scratch/html/>
-  - PCS Web UI <https://github.com/ClusterLabs/pcs-web-ui>
-  - Scancore? <https://www.alteeve.com/w/ScanCore>
 - Cluster Datei Systeme <https://en.wikipedia.org/wiki/Clustered_file_system>
+  - DRBD <http://www.drbd.org/>
   - OCFS2 <https://en.wikipedia.org/wiki/OCFS2> <https://www.admin-magazin.de/Das-Heft/2010/03/Cluster-Dateisystem-OCFS2-einfach-gemacht>
   - Ceph <https://ceph.io/en/> <https://en.wikipedia.org/wiki/Ceph_(software)#File_system>
-  - Lustre <https://www.lustre.org/>
-  - DRBD <http://www.drbd.org/>
   - GlusterFS <https://www.gluster.org/>
 - HA in Diensten
   - BIND
@@ -75,8 +72,10 @@ Wenn nicht: Je nach OS bitte installieren:
 
 Nun das GitHub Repository auf die Workstation/das Trainingslaptop herunterladen:
 
-    git clone https://github.com/betadots/linux_ha-training
-    cd linux_ha-training
+```shell
+git clone https://github.com/betadots/linux_ha-training
+cd linux_ha-training
+```
 
 Weiter geht es mit [Vorbereitung](00_Vorbereitung)
 

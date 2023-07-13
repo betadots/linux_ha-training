@@ -8,3 +8,5 @@ Dienste in denen HA eingebaut ist:
 - PostgreSQL
 
 Weiter geht es mit [HA bei Containern](../13_HA_bei_Containern)
+
+License: CC BY-NC-SA 4.0

@@ -22,3 +22,5 @@ Config
     }
 
 Weiter geht es mit [Keepalived](../06_Keepalived)
+
+License: CC BY-NC-SA 4.0

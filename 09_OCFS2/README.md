@@ -31,3 +31,5 @@
     mkfs.ocfs2 -L "ocfs2" /dev/sdb
 
 Weiter geht es mit [GlusterFS](../10_GlusterFS)
+
+License: CC BY-NC-SA 4.0
