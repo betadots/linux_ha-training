@@ -64,6 +64,7 @@ VMAC Interface
 VRRP Konfiguration
 
 ```shell
+# /etc/
 vrrp_instance instance1 {
     state BACKUP
     interface eth0
@@ -81,29 +82,35 @@ vrrp_instance instance1 {
 Durch die Anweisung `use_vmac` wird ein macvaln Interface mit dem Namen vrrp.<virtual_router_id> erzeugt. Hier also: vrrp.250
 Alternativ kann man den Namen des Interfaces explizit setzen:
 
-    use_vmac vrrp.400
+```shell
+use_vmac vrrp.400
+```
 
 Dann muss das Interface konfiguriert werden:
 
-    net.ipv4.conf.vrrp.250.arp_filter = 0
-    net.ipv4.conf.vrrp.250.accept_local = 1 (this is needed for the address owner case)
-    net.ipv4.conf.vrrp.250.rp_filter = 0
+```shell
+net.ipv4.conf.vrrp.250.arp_filter = 0
+net.ipv4.conf.vrrp.250.accept_local = 1 (this is needed for the address owner case)
+net.ipv4.conf.vrrp.250.rp_filter = 0
+```
 
-Diese Konfuguration muss auch bei einem Wechsel des Interfaces vorgenommen werden.
+Diese Konfiguration muss auch bei einem Wechsel des Interfaces vorgenommen werden.
 Mit der Anweisung `notify_master` kann man dies automatisieren:
 
-    vrrp_instance instance1 {
-        state BACKUP
-        interface eth0
-        virtual_router_id 250
-        use_vmac
-        priority 150
-        advert_int 1
-        virtual_ipaddress {
-            10.100.10.254
-        }
-        notify_master "/usr/local/bin/vmac_tweak.sh vrrp.250"
+```shell
+vrrp_instance instance1 {
+    state BACKUP
+    interface eth0
+    virtual_router_id 250
+    use_vmac
+    priority 150
+    advert_int 1
+    virtual_ipaddress {
+        10.100.10.254
     }
+    notify_master "/usr/local/bin/vmac_tweak.sh vrrp.250"
+}
+```
 
 Das Loadbalancing folgt den Möglichkeiten von LVS.
 
@@ -111,20 +118,24 @@ Das Loadbalancing folgt den Möglichkeiten von LVS.
 
 Starten des 2ten Load-Balancer
 
-    vagrant up lb2.betadots.training
-    vagrant ssh lb2.betadots.training
-    sudo -i
-
-Nginx
-
-    apt update
-    apt install -y nginx
+```shell
+vagrant up lb2.betadots.training
+vagrant ssh lb2.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+apt install -y nginx
+```
 
 Gleiche Config wie gerade eben erzeugen.
 
 Beide LB: Installation von keepalived
 
-    apt install keepalived
+```shell
+apt install keepalived
+```
 
 Keepalived kennt die folgenden Konfigurationen:
 
@@ -140,13 +151,15 @@ Beispiele liegen in `/usr/share/doc/keepalived/samples`
 
 Kommando Optionen
 
-    -f, --use-file=<config file>
-    -P, --vrrp # Nur VRRP, ohne LVS
-    -C, --check # Config check
-    -V, --dont-release-vrrp # VRRP config beim stoppen bestehen lassen
-    -I, --dont-release-ipvs # LVS config beim stoppen bestehen lassen
-    -d, --dump-conf # Config anzeigen
-    -x, --snmp # SNP aktivieren
+```text
+-f, --use-file=<config file>
+-P, --vrrp # Nur VRRP, ohne LVS
+-C, --check # Config check
+-V, --dont-release-vrrp # VRRP config beim stoppen bestehen lassen
+-I, --dont-release-ipvs # LVS config beim stoppen bestehen lassen
+-d, --dump-conf # Config anzeigen
+-x, --snmp # SNP aktivieren
+```
 
 Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../07_Clusterlabs)
 
