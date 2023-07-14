@@ -131,14 +131,14 @@ pcs resource status
 pcs resource config
 ```
 
-File System in Pacemaker ingtegrieren
+File System in Pacemaker integrieren
 
 ```shell
 pcs cluster cib fs_cfg
 pcs -f fs_cfg resource create WebFS Filesystem \
-      device="/dev/drbd1" directory="/var/www/html" fstype="xfs"
+      device="/dev/drbd0" directory="/var/www/html" fstype="xfs"
 pcs -f fs_cfg constraint colocation add \
-      WebFS with Promoted WebData-clone
+      WebFS with Started WebData-clone
 pcs -f fs_cfg constraint order \
       promote WebData-clone then start WebFS
 ```
@@ -164,6 +164,6 @@ pcs node unstandby <fqdn2>
 pcs status
 ```
 
-Weiter geht es mit [OCFS2](../09_OCFS2)
+Weiter geht es mit [GFS2](../09_GFS2)
 
 License: CC BY-NC-SA 4.0
