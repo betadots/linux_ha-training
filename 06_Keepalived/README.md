@@ -129,12 +129,54 @@ export LANG=en_US.UTF-8
 apt install -y nginx
 ```
 
-Gleiche Config wie gerade eben erzeugen.
+Netzwerk
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.12
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.12
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+```shell
+ifup eth1
+ifup eth2
+```
+
+Nginx
+
+```shell
+# /etc/nginx/site-enabled/default
+# alles andere rauslöschen
+upstream backend {
+    server 172.16.120.13;
+    server 172.16.120.14;
+}
+server {
+    listen 80;
+    location / {
+        proxy_pass http://backend;
+    }
+}
+```
+
+```shell
+systemctl restart nginx
+```
 
 Beide LB: Installation von keepalived
 
 ```shell
-apt install keepalived
+apt install -y keepalived
 ```
 
 Keepalived kennt die folgenden Konfigurationen:
@@ -160,6 +202,82 @@ Kommando Optionen
 -d, --dump-conf # Config anzeigen
 -x, --snmp # SNP aktivieren
 ```
+
+Keepalived startet erst, wenn eine Config vorhanden ist
+
+```text
+! Configuration File for keepalived
+
+global_defs {
+   notification_email {
+     root@localhost.localdomain
+   }
+   notification_email_from lb1@localhost.localdomain
+   smtp_server localhost
+   smtp_connect_timeout 30
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth1
+    virtual_router_id 101
+    priority 101
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        10.100.10.21
+    }
+}
+```
+
+```shell
+systemctl start keepalived
+```
+
+Virtual IP: `ip a`
+
+```text
+# /etc/keepalived/keepalived.conf
+virtual_server 172.16.120.21 80 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 172.16.120.13 80 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+    real_server 172.16.120.14 80 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+}
+```
+
+```shell
+systemctl start keepalived
+```
+
+Alle VM Instanzen beenden: `vagrant destroy -f`
 
 Weiter geht es mit [Clusterlabs - Pacemaker/Corosync](../07_Clusterlabs)
 
