@@ -31,9 +31,9 @@ App1:
 vagrant ssh app1.betadots.training
 sudo -i
 apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
+apt install -y locales-all vim
+echo -e 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8' >> /etc/locale.gen
+locale-gen
 ```
 
 ```shell
@@ -44,6 +44,7 @@ iface eth1 inet static
     netmask 255.255.255.0
     network 10.100.10.0
     gateway 10.100.10.254
+
 allow-hotplug eth2
 iface eth2 inet static
     address 172.16.120.13
@@ -62,8 +63,8 @@ App2:
 vagrant ssh app2.betadots.training
 sudo -i
 apt update
-apt install -y locales-all
-unset LC_CTYPE
+apt install -y locales-all vim
+unset LC_CTYPE LC_TIME
 export LANG=en_US.UTF-8
 ```
 
@@ -75,6 +76,7 @@ iface eth1 inet static
     netmask 255.255.255.0
     network 10.100.10.0
     gateway 10.100.10.254
+
 allow-hotplug eth2
 iface eth2 inet static
     address 172.16.120.14
@@ -98,7 +100,7 @@ Auf beiden Systemen:
 ```
 
 ```shell
-apt update; apt install -y pacemaker corosync crmsh pcs
+apt install -y pacemaker corosync crmsh pcs
 ```
 
 Konfiguration
@@ -110,8 +112,7 @@ TCP ports 2224, 3121, and 21064, and UDP port 5405
 pcs service
 
 ```shell
-systemctl start pcsd
-systemctl enable pcsd
+systemctl enable --now pcsd
 ```
 
 hacluster user
@@ -131,6 +132,12 @@ Cluster Nodes authentifizieren (nur auf einem Node)
 ```shell
 pcs host auth <fqdn1> <fqdn2>
 pcs cluster setup <name> <fqdn1> <fqdn2>
+```
+
+Corosync Konfiguration analysieren:
+
+```
+cat /etc/corosync/corosync.conf
 ```
 
 pcs Kommandos
@@ -166,8 +173,7 @@ Cluster Starten
 
 ```shell
 pcs cluster start --all # oder
-systemctl start corosync
-systemctl start pacemaker
+systemctl enable --now corosync pacemaker
 ```
 
 Corosync verifizieren
@@ -175,7 +181,7 @@ Corosync verifizieren
 1. Kommunikation
 
 ```shell
-corosync-cfgtool -s
+corosync-cfgtool -s # auf beiden Systemen und vergleichen
 ```
 
 2. Mitglieder und Quorum
@@ -232,22 +238,42 @@ apt search ^fence-
 apt install -y fence-agents fence-virt fence-virtd
 ```
 
+Externe Agents unter `/usr/lib/stonith/plugins/external/` prüfen
+
 ```shell
 pcs stonith list
 pcs stonith describe <AGENT_NAME>
 pcs cluster cib stonith_cfg
-pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
+#pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
 # z.B.
-# pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1,app2
+pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1,app2
 pcs -f stonith_cfg property set stonith-enabled=true
+# pcs cluster cib-push stonith_cfg
 ```
 
 Aktiv-Passiv Cluster
 
+Auf app1:
+
+```
+tail /var/log/pacemaker/pacemaker.log /var/log/corosync/corosync.log -fn0
+```
+
+Auf app2:
+
 ```shell
 pcs resource create ClusterIP ocf:heartbeat:IPaddr2 \
     ip=10.100.10.21 cidr_netmask=24 op monitor interval=30s
+```
 
+auf app1 und app2:
+
+```shell
+ip -c -4 a s
+```
+
+Auf app1 oder app2:
+```shell
 pcs resource standards
 pcs resource providers
 pcs resource agents ocf:heartbeat
@@ -299,6 +325,11 @@ pcs resource create WebSite ocf:heartbeat:apache  \
       configfile=/etc/apache2/apache2.conf \
       statusurl="http://localhost/server-status" \
       op monitor interval=1min
+```
+
+Resource ausgeben:
+```shell
+pcs resource config WebSite
 ```
 
 Timeout setzen
