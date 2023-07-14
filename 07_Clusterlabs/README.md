@@ -19,8 +19,86 @@ Cluster Resources
 
 Installation
 
+Alle VMs hochfahren und vorbereiten
+
 ```shell
-apt update; apt install -y pacemaker corosync
+vagrant up app1.betadots.training app2.betadots.training
+```
+
+App1:
+
+```shell
+vagrant ssh app1.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+```
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.13
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.13
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+```shell
+ifup eth1
+ifup eth2
+```
+
+App2:
+
+```shell
+vagrant ssh app2.betadots.training
+sudo -i
+apt update
+apt install -y locales-all
+unset LC_CTYPE
+export LANG=en_US.UTF-8
+```
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+allow-hotplug eth1
+iface eth1 inet static
+    address 10.100.10.14
+    netmask 255.255.255.0
+    network 10.100.10.0
+    gateway 10.100.10.254
+allow-hotplug eth2
+iface eth2 inet static
+    address 172.16.120.14
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+```shell
+ifup eth1
+ifup eth2
+```
+
+Auf beiden Systemen:
+
+```shell
+# hinzufügen zu /etc/hosts
+172.16.120.13 app1 app1.betadots.training
+172.16.120.14 app2 app2.betadots.training
+
+# WICHTIG: 127.0.0.1 app<n> entfernen!!!
+```
+
+```shell
+apt update; apt install -y pacemaker corosync crmsh pcs
 ```
 
 Konfiguration
@@ -32,8 +110,8 @@ TCP ports 2224, 3121, and 21064, and UDP port 5405
 pcs service
 
 ```shell
-systemctl start pcs
-systemctl enable pcs
+systemctl start pcsd
+systemctl enable pcsd
 ```
 
 hacluster user
@@ -42,7 +120,13 @@ hacluster user
 passwd hacluster
 ```
 
-Cluster Nodes authentifizieren
+Debian erzeugt automatisch einen Cluster. Den wollen wir löschen
+
+```shell
+pcs cluster destroy
+```
+
+Cluster Nodes authentifizieren (nur auf einem Node)
 
 ```shell
 pcs host auth <fqdn1> <fqdn2>
@@ -144,10 +228,17 @@ Fencing einrichten
 Suchen nach Paketen mit dem Namen `*fence*`
 
 ```shell
+apt search ^fence-
+apt install -y fence-agents fence-virt fence-virtd
+```
+
+```shell
 pcs stonith list
 pcs stonith describe <AGENT_NAME>
 pcs cluster cib stonith_cfg
 pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
+# z.B.
+# pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1,app2
 pcs -f stonith_cfg property set stonith-enabled=true
 ```
 
@@ -155,14 +246,20 @@ Aktiv-Passiv Cluster
 
 ```shell
 pcs resource create ClusterIP ocf:heartbeat:IPaddr2 \
-    ip=192.168.122.120 cidr_netmask=24 op monitor interval=30s
+    ip=10.100.10.21 cidr_netmask=24 op monitor interval=30s
 
 pcs resource standards
 pcs resource providers
 pcs resource agents ocf:heartbeat
 ```
 
-Resources schwenken
+Resourcen anzeigen
+
+```shell
+pcs status
+```
+
+Resources schwenken (Achtung: wo ist die ClusterIP aktiv?)
 
 ```shell
 pcs cluster stop <fqdn1>
@@ -184,18 +281,22 @@ apt install -y apache2
 Einrichtung server-status (wird vom apache Resource Agent benötigt)
 
 ```shell
-# /etc/apache2/conf.d/status.conf
+# /etc/apache2/conf-enabled/status.conf
 <Location /server-status>
   SetHandler server-status
   Require local
 </Location>
 ```
 
+```shell
+systemctl restart apache2
+```
+
 Cluster Resource hinzufügen
 
 ```shell
 pcs resource create WebSite ocf:heartbeat:apache  \
-      configfile=/etc/apache2/conf/apache2.conf \
+      configfile=/etc/apache2/apache2.conf \
       statusurl="http://localhost/server-status" \
       op monitor interval=1min
 ```

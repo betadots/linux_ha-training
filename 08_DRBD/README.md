@@ -3,7 +3,7 @@
 Installation
 
 ```shell
-apt install -y drdb-utils
+apt install -y drbd-utils
 ```
 
 SELinux deaktivieren
@@ -30,55 +30,61 @@ DRBD konfigurieren
 
 ```shell
 # /etc/drbd.d/drbd_training.res
-resource "drbd_lv_training" {
+resource drbd_disk {
   device minor 1;
   meta-disk internal;
   net {
     protocol C;
     allow-two-primaries yes;
-    fencing resource-and-stonith;
+    # fencing resource-and-stonith;
     verify-alg sha1;
   }
   handlers {
     fence-peer "/usr/lib/drbd/crm-fence-peer.9.sh";
     unfence-peer "/usr/lib/drbd/crm-unfence-peer.9.sh";
   }
-  on "app1" {
-    disk "/dev/vg_training/lv_training";
-    node-id 0;
+  on app1.betadots.training {
+    address 172.16.120.13:7789;
+    volume 0 {
+      device minor 0;
+      disk /dev/vg_training/lv_training;
+      meta-disk internal;
+    }
   }
-  on "app2" {
-    disk "/dev/vg_training/lv_training";
-    node-id 1;
-  }
-  connection {
-    host "app1" address 172.16.120.13:7789;
-    host "app2" address 172.16.120.14:7789;
+  on app2.betadots.training {
+    address 172.16.120.14:7789;
+    volume 0 {
+      device minor 0;
+      disk "/dev/vg_training/lv_training";
+      meta-disk internal;
+    }
   }
 }
 ```
 
-DRBD Device initialisieren
+DRBD Device initialisieren (auf beiden Nodes)
 
 ```shell
-drbdadm create-md drbd_lv_training
+drbdadm create-md drbd_disk
 modprobe drbd
-drbdadm up drbd_lv_training
+drbdadm up drbd_disk
 drbdadm status
 ```
 
-Initiale Synchronisation erzwingen
+Initiale Synchronisation erzwingen (nur auf einem Node)
 
 ```shell
-drbdadm primary --force drbd_lv_training
+drbdadm -- --overwrite-data-of-peer primary
 drbdadm status
+cat /proc/drbd
 ```
 
 File System erzeugen
 
 ```shell
-mkfs.xfs /dev/drbd1
-mount /dev/drbd1 /mnt
+apt install -y xfsprogs
+mkfs.xfs /dev/drbd0
+mount /dev/drbd0 /mnt
 ```
 
 Index.HTML erzeugen
@@ -90,7 +96,7 @@ Index.HTML erzeugen
  </html>
 
 chcon -R --reference=/var/www/html /mnt
-umount /dev/drbd1
+umount /dev/drbd0
 ```
 
 DRBD in Pacemaker/Corosync integrieren
@@ -98,8 +104,8 @@ DRBD in Pacemaker/Corosync integrieren
 ```shell
 pcs cluster cib drbd_cfg
 pcs -f drbd_cfg resource create WebData ocf:linbit:drbd \
-     drbd_resource=wwwdata op monitor interval=29s role=Promoted \
-     monitor interval=31s role=Unpromoted
+     drbd_resource=drbd_disk op monitor interval=29s role=Started \
+     monitor interval=31s role=Started
 pcs -f drbd_cfg resource promotable WebData \
      promoted-max=1 promoted-node-max=1 clone-max=2 clone-node-max=1 \
      notify=true
@@ -112,8 +118,8 @@ Oder: 1 Kommando
 
 ```shell
 pcs resource create WebData ocf:linbit:drbd \
-     drbd_resource=wwwdata op monitor interval=29s role=Promoted \
-     monitor interval=31s role=Unpromoted \
+     drbd_resource=wwwdata op monitor interval=29s role=Started \
+     monitor interval=31s role=Started \
      promotable promoted-max=1 promoted-node-max=1 clone-max=2  \
      clone-node-max=1 notify=true
 ```
