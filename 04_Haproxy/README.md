@@ -30,6 +30,11 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+```shell
+ifup eth1
+ifup eth2
+```
+
 App1:
 
 ```shell
@@ -48,6 +53,10 @@ iface eth2 inet static
     address 172.16.120.13
     netmask 255.255.255.0
     network 172.16.120.0
+```
+
+```shell
+ifup eth2
 ```
 
 Webserver installieren
@@ -74,6 +83,10 @@ iface eth2 inet static
     address 172.16.120.14
     netmask 255.255.255.0
     network 172.16.120.0
+```
+
+```shell
+ifup eth2
 ```
 
 Webserver installieren
@@ -118,6 +131,12 @@ Neustart HAproxy
 
 ```shell
 systemctl restart haproxy
+```
+
+Vom Laptop:
+
+```shell
+watch -c 'curl http://10.100.10.11'
 ```
 
 Web Interface:
