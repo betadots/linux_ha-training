@@ -32,7 +32,10 @@ iface bond0 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
+    # first interface will be the active one
     bond-slaves eth1 eth2
+    # we could configure a primary that will always be used when available
+    # bond-primary eth2
     bond-mode active-backup
     bond-miimon 100
     bond-downdelay 200
