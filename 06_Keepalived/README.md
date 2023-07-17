@@ -79,7 +79,7 @@ vrrp_instance instance1 {
 }
 ```
 
-Durch die Anweisung `use_vmac` wird ein macvaln Interface mit dem Namen vrrp.<virtual_router_id> erzeugt. Hier also: vrrp.250
+Durch die Anweisung `use_vmac` wird ein macvlan Interface mit dem Namen vrrp.<virtual_router_id> erzeugt. Hier also: vrrp.250
 Alternativ kann man den Namen des Interfaces explizit setzen:
 
 ```shell
