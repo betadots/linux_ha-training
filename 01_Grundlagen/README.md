@@ -42,7 +42,7 @@ Bei einem Active-Active Cluster laufen die Dienste dauerhaft auf beiden Systemen
 
 Wenn man einen Dienst so zur Verfügung stellen möchte, dass der Dienst auch bie sehr vielen Zugriffen schnell antwortet, nutzt man einen Loadbalancer, der die Dienste auf Verfügbarkeit prüft (siehe Active-Active Cluster).
 
-Je nach Anwendung kommen unterschiedliche Verteilmethoden zum Einsatz. Der Klassiger ist `round-robin`. Hier werden die eingehenden IP Verbindungen gleichmässig auf die Dienste verteilt.
+Je nach Anwendung kommen unterschiedliche Verteilmethoden zum Einsatz. Der Klassiker ist `round-robin`. Hier werden die eingehenden IP Verbindungen gleichmässig auf die Dienste verteilt.
 
 Loadbalancer Verteilmethoden:
 
