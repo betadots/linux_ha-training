@@ -64,7 +64,7 @@ VMAC Interface
 VRRP Konfiguration
 
 ```shell
-# /etc/
+# /etc/keepalived/keepalived.conf
 vrrp_instance instance1 {
     state BACKUP
     interface eth0
