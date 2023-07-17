@@ -30,10 +30,6 @@ App1:
 ```shell
 vagrant ssh app1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all vim
-echo -e 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8' >> /etc/locale.gen
-locale-gen
 ```
 
 ```shell
@@ -61,10 +57,6 @@ App2:
 ```shell
 vagrant ssh app2.betadots.training
 sudo -i
-apt update
-apt install -y locales-all vim
-unset LC_CTYPE LC_TIME
-export LANG=en_US.UTF-8
 ```
 
 ```shell

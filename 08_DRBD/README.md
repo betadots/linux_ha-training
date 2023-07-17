@@ -18,7 +18,7 @@ DRBD nutzt Port 7789
 
 Disks
 
-2. Festplatte mit LVM
+Zweite Festplatte mit LVM
 
 ```shell
 pvcreate /dev/sdb

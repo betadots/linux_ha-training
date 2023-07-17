@@ -74,10 +74,6 @@ Login lb1
 ```shell
 vagrant ssh lb1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 Netzwerk Konfigurieren
@@ -205,10 +201,6 @@ App1:
 ```shell
 vagrant ssh app1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 apt install -y apache2
 systemctl start apache2
 ```
@@ -218,10 +210,6 @@ App2:
 ```shell
 vagrant ssh app2.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 apt install -y nginx
 systemctl start nginx
 ```
@@ -239,10 +227,6 @@ vagrant destroy -f lb1.betadots.training
 vagrant up lb1.betadots.training
 vagrant ssh lb1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 Netzwerk Konfigurieren
@@ -263,7 +247,6 @@ iface eth2 inet static
     netmask 255.255.255.0
     network 172.16.120.0
 ```
-
 
 ### Direct Routing
 
@@ -328,7 +311,7 @@ iptables -t nat -A PREROUTING -p tcp -d 10.100.10.11 --dport 80 -j REDIRECT
 Fehleranalyse
 
 ```shell
-apt install -y tcpdump
+# apt install -y tcpdump schon installiert
 tcpdump  -ni eth2 port 80
 ```
 

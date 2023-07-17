@@ -4,10 +4,6 @@
 vagrant up lb1.betadots.training app1.betadots.training app2.betadots.training
 vagrant ssh lb1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 Netzwerk Konfigurieren
@@ -39,10 +35,6 @@ App1:
 ```shell
 vagrant ssh app1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 ```shell
@@ -69,10 +61,6 @@ App2:
 ```shell
 vagrant ssh app2.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 ```shell
@@ -146,7 +134,7 @@ Web Interface:
 
 Stoppen eines Webservers. Was sehen wir?
 
-TODO: API
+TODO: API, Peers
 
 Weiter geht es mit [Nginx](../05_Nginx)
 

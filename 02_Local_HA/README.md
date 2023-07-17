@@ -9,10 +9,6 @@
 vagrant up lb1.betadots.training
 vagrant ssh lb1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 apt install -y ifenslave
 ```
 
@@ -68,7 +64,7 @@ watch -n 0.5 'curl -I --silent 10.100.10.11'
 
 alternativ:
 
-```
+```shell
 ping 10.100.10.11
 ```
 
@@ -106,7 +102,7 @@ cat /proc/net/bonding/bond0
 
 Prüfen Festplatten:
 
-```
+```shell
 root@lb1:~# lsblk 
 NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
 sda      8:0    0  20G  0 disk 

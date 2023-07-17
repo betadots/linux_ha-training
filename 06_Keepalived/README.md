@@ -122,10 +122,6 @@ Starten des 2ten Load-Balancer
 vagrant up lb2.betadots.training
 vagrant ssh lb2.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 apt install -y nginx
 ```
 
