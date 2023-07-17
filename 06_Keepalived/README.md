@@ -138,7 +138,6 @@ iface eth1 inet static
     address 10.100.10.12
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
 auto eth2
 iface eth2 inet static
