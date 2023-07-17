@@ -32,7 +32,6 @@ iface bond0 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
     bond-slaves eth1 eth2
     bond-mode active-backup
     bond-miimon 100
