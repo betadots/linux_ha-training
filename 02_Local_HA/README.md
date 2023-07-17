@@ -27,6 +27,7 @@ Bonding Config erzeugen:
 
 ```shell
 # /etc/network/interfaces
+auto bond0
 iface bond0 inet static
     address 10.100.10.11
     netmask 255.255.255.0
