@@ -148,8 +148,6 @@ Stoppen eines Webservers. Was sehen wir?
 
 TODO: API
 
-Stoppen des load balancers: `vagrant destroy -f lb1.betadots.training`
-
 Weiter geht es mit [Nginx](../05_Nginx)
 
 License: CC BY-NC-SA 4.0
