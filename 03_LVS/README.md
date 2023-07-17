@@ -370,8 +370,7 @@ iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
 ```shell
 apt install -y ldirectord
-mkdir /etc/ha.d/conf
-cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/conf/ldirectord.cf
+cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ldirectord.cf
 ```
 
 Konfiguration anpassen
