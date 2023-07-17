@@ -86,14 +86,13 @@ lb1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.11
     netmask 255.255.255.0
@@ -104,7 +103,7 @@ app1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.13
     netmask 255.255.255.0
@@ -115,7 +114,7 @@ app2:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.14
     netmask 255.255.255.0
@@ -252,14 +251,13 @@ lb1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.11
     netmask 255.255.255.0
@@ -295,12 +293,11 @@ Netzwerk konfigurieren
 
 ```shell
 # zu /etc/network/interfaces hinzufügen
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.13
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 ```
 
 iptables um Anfragen gegen VIP anzunehmen:
@@ -315,12 +312,11 @@ Netzwerk konfigurieren
 
 ```shell
 # zu /etc/network/interfaces hinzufügen
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.14
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 ```
 
 iptables um Anfragen gegen VIP anzunehmen:
