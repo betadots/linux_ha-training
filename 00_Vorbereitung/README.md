@@ -87,6 +87,19 @@ Wenn im DHCP Server Daten hinterlegt sind, diese bitte durch '0.0.0.0' ersetzen 
 
 Wenn man den DHCP Server deaktivieren musste, muss das Linux System neu gestartet werden! Unbedingt neu starten!
 
+Virtualbox erlaubt standardmäßig nur bestimmte IP Ranges. Für unsere Demoumgebungen müssen wir weitere (oder einfach alle) erlauben:
+
+```
+sudo mkdir /etc/vbox
+sudo echo '* 0.0.0.0/0' > /etc/vbox/networks.conf
+```
+
+Zusätzlich deakivieren wir das erzeugen von symlinks für das zwischen VM und Host geteilte Verzeichniss:
+
+```
+export VAGRANT_DISABLE_VBOXSYMLINKCREATE=1
+```
+
 ## VM starten
 
 Jetzt können die VMs instantiiert werden:
