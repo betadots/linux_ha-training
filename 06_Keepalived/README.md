@@ -13,7 +13,7 @@ Als virtuelle MAC wird eine Multicast-Adresse aus dem Bereich 00:00:5E:00:01:01 
 
 VRRP ist ein eigener IP Protokolltyp mit der Nummer 112. Sofern Version 2 mit MD5 Authentication benutzt wird, wird abweichend allerdings Protokollnummer 51 (Authentication Header) verwendet.
 
-VRRP2 hat authentifizierung.
+VRRP2 hat Authentifizierung.
 VRRP3 hat IPv6 support, aber die authentifizierung wurde wieder entfernt.
 
 Keepalived nutzt VRRP2.
