@@ -63,6 +63,12 @@ Laptop:
 watch -n 0.5 'curl -I --silent 10.100.10.11'
 ```
 
+alternativ:
+
+```
+ping 10.100.10.11
+```
+
 Deaktivieren eth1 am Laptop:
 
 ```shell
