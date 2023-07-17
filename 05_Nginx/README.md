@@ -41,7 +41,7 @@ ifup eth2
 Nginx
 
 ```shell
-# /etc/nginx/site-enabled/default
+# /etc/nginx/sites-enabled/default
 # alles andere rauslöschen
 upstream backend {
     server 172.16.120.13;
