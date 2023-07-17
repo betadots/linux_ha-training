@@ -269,7 +269,7 @@ iface eth2 inet static
 
 #### Loadbalancer
 
-Installation: `apt update; apt install -y ipvsadm`
+Installation: `apt install -y ipvsadm`
 
 Einrichten des Load-Balancers:
 
