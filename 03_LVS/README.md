@@ -86,14 +86,13 @@ lb1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.11
     netmask 255.255.255.0
@@ -104,7 +103,7 @@ app1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.13
     netmask 255.255.255.0
@@ -115,7 +114,7 @@ app2:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.14
     netmask 255.255.255.0
@@ -230,7 +229,7 @@ systemctl start nginx
 Jetzt kann auf den Webservice zugegriffen werden:
 
 ```shell
-watch -c 1 'curl http://10.100.10.11'
+watch --interval 1 'curl http://10.100.10.11'
 ```
 
 Für den nächsten Punkt muss die LB VM neu instantiiert werden:
@@ -252,14 +251,13 @@ lb1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.11
     netmask 255.255.255.0
@@ -271,7 +269,7 @@ iface eth2 inet static
 
 #### Loadbalancer
 
-Installation: `apt update; apt install -y ipvsadm`
+Installation: `apt install -y ipvsadm`
 
 Einrichten des Load-Balancers:
 
@@ -295,12 +293,11 @@ Netzwerk konfigurieren
 
 ```shell
 # zu /etc/network/interfaces hinzufügen
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.13
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 ```
 
 iptables um Anfragen gegen VIP anzunehmen:
@@ -315,12 +312,11 @@ Netzwerk konfigurieren
 
 ```shell
 # zu /etc/network/interfaces hinzufügen
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.14
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 ```
 
 iptables um Anfragen gegen VIP anzunehmen:
@@ -344,7 +340,7 @@ curl http://10.100.10.11
 
 Deaktivieren eines Webservers. Was sehen wir?
 
-ipvsadm flushen: `ipvsadm -F`
+ipvsadm flushen: `ipvsadm --clear`
 
 Lösung: ldirectord
 
@@ -374,7 +370,7 @@ iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
 ```shell
 apt install -y ldirectord
-mkidr /etc/ha.d/conf
+mkdir /etc/ha.d/conf
 cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/conf/ldirectord.cf
 ```
 

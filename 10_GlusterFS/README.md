@@ -1,7 +1,7 @@
 # GlusterFS
 
 ```shell
-apt install -y gluster9
+apt install -y glusterfs-server glusterfs-client
 ```
 
 Weiter geht es mit [Ceph](../11_Ceph)

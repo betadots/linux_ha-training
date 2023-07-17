@@ -13,8 +13,8 @@ Als virtuelle MAC wird eine Multicast-Adresse aus dem Bereich 00:00:5E:00:01:01 
 
 VRRP ist ein eigener IP Protokolltyp mit der Nummer 112. Sofern Version 2 mit MD5 Authentication benutzt wird, wird abweichend allerdings Protokollnummer 51 (Authentication Header) verwendet.
 
-VRRP2 hat authentifizierung.
-VRRP3 hat IPv6 support, aber die authentifizierung wurde wieder entfernt.
+VRRP2 hat Authentifizierung.
+VRRP3 hat IPv6 support, aber die Authentifizierung wurde wieder entfernt.
 
 Keepalived nutzt VRRP2.
 
@@ -64,7 +64,7 @@ VMAC Interface
 VRRP Konfiguration
 
 ```shell
-# /etc/
+# /etc/keepalived/keepalived.conf
 vrrp_instance instance1 {
     state BACKUP
     interface eth0
@@ -79,7 +79,7 @@ vrrp_instance instance1 {
 }
 ```
 
-Durch die Anweisung `use_vmac` wird ein macvaln Interface mit dem Namen vrrp.<virtual_router_id> erzeugt. Hier also: vrrp.250
+Durch die Anweisung `use_vmac` wird ein macvlan Interface mit dem Namen vrrp.<virtual_router_id> erzeugt. Hier also: vrrp.250
 Alternativ kann man den Namen des Interfaces explizit setzen:
 
 ```shell
@@ -133,14 +133,13 @@ Netzwerk
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.12
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.12
     netmask 255.255.255.0
@@ -155,7 +154,7 @@ ifup eth2
 Nginx
 
 ```shell
-# /etc/nginx/site-enabled/default
+# /etc/nginx/sites-enabled/default
 # alles andere rauslöschen
 upstream backend {
     server 172.16.120.13;

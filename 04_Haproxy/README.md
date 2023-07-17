@@ -16,14 +16,13 @@ lb1:
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth1
+auto eth1
 iface eth1 inet static
     address 10.100.10.11
     netmask 255.255.255.0
     network 10.100.10.0
-    gateway 10.100.10.254
 
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.11
     netmask 255.255.255.0
@@ -48,7 +47,7 @@ export LANG=en_US.UTF-8
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.13
     netmask 255.255.255.0
@@ -78,7 +77,7 @@ export LANG=en_US.UTF-8
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
-allow-hotplug eth2
+auto eth2
 iface eth2 inet static
     address 172.16.120.14
     netmask 255.255.255.0
@@ -100,13 +99,13 @@ Load-Balancer Anwendung
 lb1:
 
 ```shell
-apt update; apt install -y haproxy
+apt install -y haproxy
 ```
 
 Konfiguration
 
 ```text
-# /etc/haproxy/haproxy.conf
+# /etc/haproxy/haproxy.cfg
 # am Ende einfügen:
 
 frontend stats
@@ -115,6 +114,8 @@ frontend stats
     stats uri /stats
     stats refresh 10s
     stats admin if TRUE
+    option http-use-htx
+    http-request use-service prometheus-exporter if { path /metrics }
 
 frontend app
     bind *:80
@@ -136,7 +137,7 @@ systemctl restart haproxy
 Vom Laptop:
 
 ```shell
-watch -c 'curl http://10.100.10.11'
+watch --interval 1 'curl http://10.100.10.11'
 ```
 
 Web Interface:
@@ -146,8 +147,6 @@ Web Interface:
 Stoppen eines Webservers. Was sehen wir?
 
 TODO: API
-
-Stoppen des load balancers: `vagrant destroy -f lb1.betadots.training`
 
 Weiter geht es mit [Nginx](../05_Nginx)
 

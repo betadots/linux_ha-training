@@ -53,6 +53,8 @@ Tag 2:
 Tag 3:
 
 - DRBD
+- GFS2
+Optional - Nur zeigen
 - OCFS2
 - GlusterFS
 - Ceph - Vorstellung
