@@ -105,7 +105,7 @@ apt install -y haproxy
 Konfiguration
 
 ```text
-# /etc/haproxy/haproxy.conf
+# /etc/haproxy/haproxy.cfg
 # am Ende einfügen:
 
 frontend stats
