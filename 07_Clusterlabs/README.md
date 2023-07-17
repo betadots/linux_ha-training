@@ -11,7 +11,7 @@ Komponenten
 - corosync - Messaging und Quorum
 - Resource agents - Scripte für Services
 - Fencing agents - Scripts für Network Power Switche und SAN devices zur Isolation von Cluster Servern
-- Pacemaker - Überwachung uns Steierung von Anwendungen oder Diensten
+- Pacemaker - Überwachung uns Steuerung von Anwendungen oder Diensten
 
 Cluster Quorum
 
@@ -136,7 +136,7 @@ pcs cluster setup <name> <fqdn1> <fqdn2>
 
 Corosync Konfiguration analysieren:
 
-```
+```shell
 cat /etc/corosync/corosync.conf
 ```
 
@@ -184,7 +184,7 @@ Corosync verifizieren
 corosync-cfgtool -s # auf beiden Systemen und vergleichen
 ```
 
-2. Mitglieder und Quorum
+1. Mitglieder und Quorum
 
 ```shell
 corosync-cmapctl | grep members
@@ -211,6 +211,9 @@ pcs cluster verify --full
 Fencing
 
 Abschalten
+
+Das will man nur auf einem System machen, auf dem man kurz etwas testen möchte.
+Produktive Cluster müssen unbedingt das Fencing eingerichtet bekommen, um Split-Brain Situationen zu verhindern.
 
 ```shell
 pcs property set stonith-enabled=false
@@ -253,9 +256,11 @@ pcs -f stonith_cfg property set stonith-enabled=true
 
 Aktiv-Passiv Cluster
 
+Wir brauchen eine Service IP, die schwenken kann.
+
 Auf app1:
 
-```
+```shell
 tail /var/log/pacemaker/pacemaker.log /var/log/corosync/corosync.log -fn0
 ```
 
@@ -273,6 +278,7 @@ ip -c -4 a s
 ```
 
 Auf app1 oder app2:
+
 ```shell
 pcs resource standards
 pcs resource providers
@@ -328,6 +334,7 @@ pcs resource create WebSite ocf:heartbeat:apache  \
 ```
 
 Resource ausgeben:
+
 ```shell
 pcs resource config WebSite
 ```
@@ -353,6 +360,8 @@ wget -O - http://localhost/server-status
 
 Resourcen Abhängigkeiten
 
+Die Service IP und der Service müssen immer als eine zusammenhängende Einheit betrachtet werden.
+
 ```shell
 pcs constraint colocation add WebSite with ClusterIP INFINITY
 pcs constraint
@@ -360,6 +369,8 @@ pcs status
 ```
 
 Resourcen Reihenfolgen
+
+Frage: was muss zuerst gestartet werden? Die Service IP oder der Service?
 
 ```shell
 pcs constraint order ClusterIP then WebSite
