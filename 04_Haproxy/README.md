@@ -136,7 +136,7 @@ systemctl restart haproxy
 Vom Laptop:
 
 ```shell
-watch -c 'curl http://10.100.10.11'
+watch --interval 1 'curl http://10.100.10.11'
 ```
 
 Web Interface:

@@ -229,7 +229,7 @@ systemctl start nginx
 Jetzt kann auf den Webservice zugegriffen werden:
 
 ```shell
-watch -c 1 'curl http://10.100.10.11'
+watch --interval 1 'curl http://10.100.10.11'
 ```
 
 Für den nächsten Punkt muss die LB VM neu instantiiert werden:
