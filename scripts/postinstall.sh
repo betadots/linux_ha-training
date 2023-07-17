@@ -16,3 +16,4 @@ apt -qq --yes install vim tcpdump htop locales-all curl iptraf-ng
 echo "### Configuring locales on ${hostn}"
 echo -e 'de_DE.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nen_GB.UTF-8 UTF-8' > /etc/locale.gen
 locale-gen
+echo -e '\nexport LANG=en_US.UTF-8\n' >> /root/.bashrc

@@ -11,13 +11,16 @@ Komponenten
 - corosync - Messaging und Quorum
 - Resource agents - Scripte für Services
 - Fencing agents - Scripts für Network Power Switche und SAN devices zur Isolation von Cluster Servern
-- Pacemaker - Überwachung uns Steierung von Anwendungen oder Diensten
+- Pacemaker - Überwachung uns Steuerung von Anwendungen oder Diensten
 
 Cluster Quorum
 
 Cluster Resources
 
 Installation
+
+ACHTUNG im Training nutzen wir aktuell einen 2 Node Cluster.
+Damit kann man kein Quorum abbilden. In der Produktoin müssen das mindestens 3 und besser 5 Nodes sein!
 
 Alle VMs hochfahren und vorbereiten
 
@@ -30,10 +33,6 @@ App1:
 ```shell
 vagrant ssh app1.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 ```shell
@@ -61,10 +60,6 @@ App2:
 ```shell
 vagrant ssh app2.betadots.training
 sudo -i
-apt update
-apt install -y locales-all
-unset LC_CTYPE
-export LANG=en_US.UTF-8
 ```
 
 ```shell
@@ -98,7 +93,7 @@ Auf beiden Systemen:
 ```
 
 ```shell
-apt update; apt install -y pacemaker corosync crmsh pcs
+apt install -y pacemaker corosync crmsh pcs
 ```
 
 Konfiguration
@@ -110,8 +105,7 @@ TCP ports 2224, 3121, and 21064, and UDP port 5405
 pcs service
 
 ```shell
-systemctl start pcsd
-systemctl enable pcsd
+systemctl enable --now pcsd
 ```
 
 hacluster user
@@ -131,6 +125,12 @@ Cluster Nodes authentifizieren (nur auf einem Node)
 ```shell
 pcs host auth <fqdn1> <fqdn2>
 pcs cluster setup <name> <fqdn1> <fqdn2>
+```
+
+Corosync Konfiguration analysieren:
+
+```shell
+cat /etc/corosync/corosync.conf
 ```
 
 pcs Kommandos
@@ -166,8 +166,7 @@ Cluster Starten
 
 ```shell
 pcs cluster start --all # oder
-systemctl start corosync
-systemctl start pacemaker
+systemctl enable --now corosync pacemaker
 ```
 
 Corosync verifizieren
@@ -175,10 +174,10 @@ Corosync verifizieren
 1. Kommunikation
 
 ```shell
-corosync-cfgtool -s
+corosync-cfgtool -s # auf beiden Systemen und vergleichen
 ```
 
-2. Mitglieder und Quorum
+1. Mitglieder und Quorum
 
 ```shell
 corosync-cmapctl | grep members
@@ -206,6 +205,9 @@ Fencing
 
 Abschalten
 
+Das will man nur auf einem System machen, auf dem man kurz etwas testen möchte.
+Produktive Cluster müssen unbedingt das Fencing eingerichtet bekommen, um Split-Brain Situationen zu verhindern.
+
 ```shell
 pcs property set stonith-enabled=false
 ```
@@ -232,22 +234,45 @@ apt search ^fence-
 apt install -y fence-agents fence-virt fence-virtd
 ```
 
+Externe Agents unter `/usr/lib/stonith/plugins/external/` prüfen
+
 ```shell
 pcs stonith list
 pcs stonith describe <AGENT_NAME>
 pcs cluster cib stonith_cfg
-pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
+#pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
 # z.B.
-# pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1,app2
+pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1,app2
 pcs -f stonith_cfg property set stonith-enabled=true
+# pcs cluster cib-push stonith_cfg
 ```
 
 Aktiv-Passiv Cluster
 
+Wir brauchen eine Service IP, die schwenken kann.
+
+Auf app1:
+
+```shell
+tail /var/log/pacemaker/pacemaker.log /var/log/corosync/corosync.log -fn0
+```
+
+Auf app2:
+
 ```shell
 pcs resource create ClusterIP ocf:heartbeat:IPaddr2 \
     ip=10.100.10.21 cidr_netmask=24 op monitor interval=30s
+```
 
+auf app1 und app2:
+
+```shell
+ip -c -4 a s
+```
+
+Auf app1 oder app2:
+
+```shell
 pcs resource standards
 pcs resource providers
 pcs resource agents ocf:heartbeat
@@ -301,6 +326,12 @@ pcs resource create WebSite ocf:heartbeat:apache  \
       op monitor interval=1min
 ```
 
+Resource ausgeben:
+
+```shell
+pcs resource config WebSite
+```
+
 Timeout setzen
 
 ```shell
@@ -322,6 +353,8 @@ wget -O - http://localhost/server-status
 
 Resourcen Abhängigkeiten
 
+Die Service IP und der Service müssen immer als eine zusammenhängende Einheit betrachtet werden.
+
 ```shell
 pcs constraint colocation add WebSite with ClusterIP INFINITY
 pcs constraint
@@ -329,6 +362,8 @@ pcs status
 ```
 
 Resourcen Reihenfolgen
+
+Frage: was muss zuerst gestartet werden? Die Service IP oder der Service?
 
 ```shell
 pcs constraint order ClusterIP then WebSite
