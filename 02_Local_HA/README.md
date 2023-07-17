@@ -124,22 +124,59 @@ fdisk -l /dev/sdc
 Anlegen des RAID:
 
 ```shell
-apt install -y mdadm
-mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
-
-mdadm: Note: this array has metadata at the start and
-    may not be suitable as a boot device.  If you plan to
-    store '/boot' on this device please ensure that
-    your boot-loader understands md/v1.x metadata, or use
-    --metadata=0.90
-Continue creating array? y
+root@lb1:~# mdadm --create /dev/md/0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc --metadata=1.2
+mdadm: array /dev/md/0 started.
+root@lb1:~# 
 ```
 
 Prüfen MD Device
 
 ```shell
+root@lb1:~# lsblk 
+NAME   MAJ:MIN RM SIZE RO TYPE  MOUNTPOINT
+sda      8:0    0  20G  0 disk  
+└─sda1   8:1    0  20G  0 part  /
+sdb      8:16   0  10G  0 disk  
+└─md0    9:0    0  10G  0 raid1 /mnt
+sdc      8:32   0  10G  0 disk  
+└─md0    9:0    0  10G  0 raid1 /mnt
+root@lb1:~# 
+```
+
+```shell
 cat /proc/mdstat
-mdadm -D /dev/md0
+mdadm --detail /dev/md0
+```
+
+```shell
+root@lb1:~# mdadm --examine /dev/sdb
+/dev/sdb:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x0
+     Array UUID : ef044e82:c2466b52:bdf36688:9eab5e42
+           Name : lb1.betadots.training:0  (local to host lb1.betadots.training)
+  Creation Time : Mon Jul 17 10:14:40 2023
+     Raid Level : raid1
+   Raid Devices : 2
+
+ Avail Dev Size : 20953088 (9.99 GiB 10.73 GB)
+     Array Size : 10476544 (9.99 GiB 10.73 GB)
+    Data Offset : 18432 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=18280 sectors, after=0 sectors
+          State : clean
+    Device UUID : 22b2b196:5ac87516:f8e6f752:6b56779f
+
+    Update Time : Mon Jul 17 10:15:33 2023
+  Bad Block Log : 512 entries available at offset 136 sectors
+       Checksum : 875a2899 - correct
+         Events : 19
+
+
+   Device Role : Active device 0
+   Array State : AA ('A' == active, '.' == missing, 'R' == replacing)
+root@lb1:~# 
 ```
 
 Anlegen FS und mount
@@ -159,7 +196,7 @@ dd if=/dev/urandom of=/mnt/testfile-1-1G bs=1G count=1 oflag=dsync
 1073741824 bytes (1.1 GB, 1.0 GiB) copied, 3.87684 s, 277 MB/s
 ```
 
-2 Sysctl Parameter:
+2 Sysctl Parameter um Raid Resync einzuschränken/zu beschleunigen:
 
 ```shell
 cat /proc/sys/dev/raid/speed_limit_max
@@ -174,8 +211,8 @@ Löschen eines RAID Devices:
 ```shell
 umount /mnt
 mdadm --stop /dev/md0
-mdadm --zero-superblock /dev/sda
 mdadm --zero-superblock /dev/sdb
+mdadm --zero-superblock /dev/sdc
 ```
 
 Umgebung aufräumen
