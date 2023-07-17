@@ -114,6 +114,8 @@ frontend stats
     stats uri /stats
     stats refresh 10s
     stats admin if TRUE
+    option http-use-htx
+    http-request use-service prometheus-exporter if { path /metrics }
 
 frontend app
     bind *:80
