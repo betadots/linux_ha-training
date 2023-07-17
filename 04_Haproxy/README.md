@@ -99,7 +99,7 @@ Load-Balancer Anwendung
 lb1:
 
 ```shell
-apt update; apt install -y haproxy
+apt install -y haproxy
 ```
 
 Konfiguration
