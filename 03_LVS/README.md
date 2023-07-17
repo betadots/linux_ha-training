@@ -340,7 +340,7 @@ curl http://10.100.10.11
 
 Deaktivieren eines Webservers. Was sehen wir?
 
-ipvsadm flushen: `ipvsadm -F`
+ipvsadm flushen: `ipvsadm --clear`
 
 Lösung: ldirectord
 
@@ -370,7 +370,7 @@ iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
 ```shell
 apt install -y ldirectord
-mkidr /etc/ha.d/conf
+mkdir /etc/ha.d/conf
 cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/conf/ldirectord.cf
 ```
 
