@@ -318,7 +318,13 @@ pcs resource create ClusterIP ocf:heartbeat:IPaddr2 \
 auf app1 und app2:
 
 ```shell
-ip -c -4 a s
+ip -4 a s
+```
+
+oder:
+
+```shell
+ip -br a
 ```
 
 Auf app1 oder app2:
