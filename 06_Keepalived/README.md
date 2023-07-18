@@ -191,11 +191,12 @@ Kommando Optionen
 ```text
 -f, --use-file=<config file>
 -P, --vrrp # Nur VRRP, ohne LVS
--C, --check # Config check
+-C, --check # Config subsystem starten
 -V, --dont-release-vrrp # VRRP config beim stoppen bestehen lassen
 -I, --dont-release-ipvs # LVS config beim stoppen bestehen lassen
 -d, --dump-conf # Config anzeigen
 -x, --snmp # SNP aktivieren
+-t, # Konfiguration validieren. Pfad muss angegeben werden
 ```
 
 Keepalived startet erst, wenn eine Config vorhanden ist
