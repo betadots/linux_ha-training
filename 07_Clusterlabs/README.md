@@ -191,6 +191,8 @@ pacemakerd --features
 
 Cluster Starten
 
+(Achtung: Manchmal möchte man corosync/pacemaker nicht im autostart, kann zu flappenden Cluster führen)
+
 ```shell
 pcs cluster start --all # oder
 systemctl enable --now corosync pacemaker
