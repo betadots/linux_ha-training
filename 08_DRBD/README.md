@@ -94,7 +94,9 @@ Index.HTML erzeugen
  <html>
   <body>My Test Site - DRBD</body>
  </html>
+```
 
+Wieder unmounten:
 ```shell
 chcon -R --reference=/var/www/html /mnt # nur auf RHEL Systemen
 umount /mnt
