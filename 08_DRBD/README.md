@@ -166,6 +166,7 @@ pcs status
 ```
 
 Pacemaker Web UI
+
 pcsd stellt eine Web UI bereit. Erreichbar unter:
 
 * https://10.100.10.13:2224
