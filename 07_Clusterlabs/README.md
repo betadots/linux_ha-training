@@ -263,13 +263,31 @@ apt install -y fence-agents fence-virt fence-virtd
 
 Externe Agents unter `/usr/lib/stonith/plugins/external/` prüfen
 
+Wir möchten fencing per ssh in unserer Lab Umgebung nutzen.
+
+Für das external/ssh Script muss `at` auf allen Clusternodes nachinstalliert werden:
+
+```shell
+apt install -y at
+```
+
+Danach muss als root user auf einem Knoten ein ssh key erzeugt werden:
+
+
+```shell
+ssh-keygen -t ed25519 -N '' -f /root/.ssh/id_ed25519
+cat /root/.ssh/id_ed25519.pub
+```
+
+Der Public Key muss auf allen anderen Clusternodes in `/root/.ssh/authorized_keys` hinterlegt werden.
+
 ```shell
 pcs stonith list
 pcs stonith describe <AGENT_NAME>
 pcs cluster cib stonith_cfg
 #pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
 # z.B.
-pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1,app2
+pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1.betadots.training,app2.betadots.training
 pcs -f stonith_cfg property set stonith-enabled=true
 # pcs cluster cib-push stonith_cfg
 ```
