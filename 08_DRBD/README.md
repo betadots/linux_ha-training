@@ -136,7 +136,7 @@ File System in Pacemaker integrieren
 
 ```shell
 pcs cluster cib fs_cfg
-pcs -f fs_cfg resource create WebFS Filesystem \
+pcs -f fs_cfg resource create WebFS ocf:heartbeat:Filesystem \
       device="/dev/drbd0" directory="/var/www/html" fstype="xfs"
 pcs -f fs_cfg constraint colocation add \
       WebFS with Started WebData-clone
