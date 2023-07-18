@@ -34,7 +34,7 @@ pcs resource
 Prüfen, wer ist DRBD Primary?
 
 ```shell
-mkfs.gfs2 -p lock_dlm -j 2 -t mycluster:web /dev/drbd0
+mkfs.gfs2 -p lock_dlm -j 2 -t demo:web /dev/drbd0
 mount /dev/drbd0 /mnt/
 cat <<-END >/mnt/index.html
 <html>
