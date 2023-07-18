@@ -401,6 +401,8 @@ pcs resource create WebSite ocf:heartbeat:apache  \
 Alternativ über systemd und nicht ocf Scripts:
 
 ```shell
+# ggf die ocf resource löschen:
+pcs resource delete WebSite
 pcs resource create WebSite systemd:apache2
 ```
 
