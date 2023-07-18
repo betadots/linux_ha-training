@@ -127,6 +127,33 @@ pcs host auth <fqdn1> <fqdn2>
 pcs cluster setup <name> <fqdn1> <fqdn2>
 ```
 
+```
+root@app1:~# pcs host auth app1.betadots.training app2.betadots.training
+Username: hacluster
+Password: 
+app1.betadots.training: Authorized
+app2.betadots.training: Authorized
+root@app1:~# pcs cluster setup demo app1.betadots.training app2.betadots.training
+No addresses specified for host 'app1.betadots.training', using 'app1.betadots.training'
+No addresses specified for host 'app2.betadots.training', using 'app2.betadots.training'
+Destroying cluster on hosts: 'app1.betadots.training', 'app2.betadots.training'...
+app1.betadots.training: Successfully destroyed cluster
+app2.betadots.training: Successfully destroyed cluster
+Requesting remove 'pcsd settings' from 'app1.betadots.training', 'app2.betadots.training'
+app1.betadots.training: successful removal of the file 'pcsd settings'
+app2.betadots.training: successful removal of the file 'pcsd settings'
+Sending 'corosync authkey', 'pacemaker authkey' to 'app1.betadots.training', 'app2.betadots.training'
+app1.betadots.training: successful distribution of the file 'corosync authkey'
+app1.betadots.training: successful distribution of the file 'pacemaker authkey'
+app2.betadots.training: successful distribution of the file 'corosync authkey'
+app2.betadots.training: successful distribution of the file 'pacemaker authkey'
+Sending 'corosync.conf' to 'app1.betadots.training', 'app2.betadots.training'
+app1.betadots.training: successful distribution of the file 'corosync.conf'
+app2.betadots.training: successful distribution of the file 'corosync.conf'
+Cluster has been successfully set up.
+root@app1:~#
+```
+
 Corosync Konfiguration analysieren:
 
 ```shell
