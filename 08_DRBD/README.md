@@ -97,7 +97,7 @@ Index.HTML erzeugen
 
 ```shell
 chcon -R --reference=/var/www/html /mnt # nur auf RHEL Systemen
-umount /dev/drbd0
+umount /mnt
 ```
 
 DRBD in Pacemaker/Corosync integrieren
