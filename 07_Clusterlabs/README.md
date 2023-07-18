@@ -371,7 +371,7 @@ Einrichtung server-status (wird vom apache Resource Agent benötigt)
 ```
 
 ```shell
-systemctl restart apache2
+systemctl disable --now apache2.service apache-htcacheclean.service
 ```
 
 Cluster Resource hinzufügen
