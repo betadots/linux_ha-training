@@ -281,6 +281,12 @@ cat /root/.ssh/id_ed25519.pub
 
 Der Public Key muss auf allen anderen Clusternodes in `/root/.ssh/authorized_keys` hinterlegt werden.
 
+Außerdem muss der SSH Hostkey der anderen Nodes importiert werden:
+
+```shell
+ssh-keyscan app2.betadots.training >> /root/.ssh/known_hosts
+```
+
 ```shell
 pcs stonith list
 pcs stonith describe <AGENT_NAME>
@@ -289,7 +295,7 @@ pcs cluster cib stonith_cfg
 # z.B.
 pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1.betadots.training,app2.betadots.training
 pcs -f stonith_cfg property set stonith-enabled=true
-# pcs cluster cib-push stonith_cfg
+pcs cluster cib-push stonith_cfg
 ```
 
 Aktiv-Passiv Cluster
