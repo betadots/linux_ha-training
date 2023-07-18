@@ -9,7 +9,7 @@ apt install -y drbd-utils
 SELinux deaktivieren
 
 ```shell
-semanage permissive -a drbd_t
+semanage permissive -a drbd_t # nur auf RHEL Systemen
 ```
 
 Firewall
@@ -95,7 +95,8 @@ Index.HTML erzeugen
   <body>My Test Site - DRBD</body>
  </html>
 
-chcon -R --reference=/var/www/html /mnt
+```shell
+chcon -R --reference=/var/www/html /mnt # nur auf RHEL Systemen
 umount /dev/drbd0
 ```
 
