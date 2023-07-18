@@ -74,7 +74,7 @@ drbdadm status
 Initiale Synchronisation erzwingen (nur auf einem Node)
 
 ```shell
-drbdadm -- --overwrite-data-of-peer primary
+drbdadm primary --force drbd_disk
 drbdadm status
 cat /proc/drbd
 ```
