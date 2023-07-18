@@ -165,6 +165,15 @@ pcs node unstandby <fqdn2>
 pcs status
 ```
 
+Pacemaker Web UI
+pcsd stellt eine Web UI bereit. Erreichbar unter:
+
+* https://10.100.10.13:2224
+* https://10.100.10.14:2224
+
+Einloggen mit dem hacluster User.
+
+
 Weiter geht es mit [GFS2](../09_GFS2)
 
 License: CC BY-NC-SA 4.0
