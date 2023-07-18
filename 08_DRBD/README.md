@@ -82,7 +82,7 @@ cat /proc/drbd
 File System erzeugen
 
 ```shell
-apt install -y xfsprogs
+apt install -y xfsprogs # auf app1 und app2
 mkfs.xfs /dev/drbd0
 mount /dev/drbd0 /mnt
 ```
