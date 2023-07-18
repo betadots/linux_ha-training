@@ -119,7 +119,7 @@ Oder: 1 Kommando
 
 ```shell
 pcs resource create WebData ocf:linbit:drbd \
-     drbd_resource=wwwdata op monitor interval=29s role=Started \
+     drbd_resource=drbd_disk op monitor interval=29s role=Started \
      monitor interval=31s role=Started \
      promotable promoted-max=1 promoted-node-max=1 clone-max=2  \
      clone-node-max=1 notify=true
