@@ -241,7 +241,80 @@ Produktive Cluster müssen unbedingt das Fencing eingerichtet bekommen, um Split
 pcs property set stonith-enabled=false
 ```
 
-Aktivieren
+Cluster Node ergänzen:
+
+App3:
+
+```shell
+vagrant up app3.betadots.training
+vagrant ssh app3.betadots.training
+sudo -i
+```
+
+```shell
+# hinzufügen zu /etc/network/interfaces
+auto eth1
+iface eth1 inet static
+    address 10.100.10.15
+    netmask 255.255.255.0
+    network 10.100.10.0
+
+auto eth2
+iface eth2 inet static
+    address 172.16.120.15
+    netmask 255.255.255.0
+    network 172.16.120.0
+```
+
+Abhängigkeiten wieder installieren und Default Cluster löschen:
+
+```shell
+apt install -y pacemaker corosync crmsh pcs at
+systemctl enable --now pcsd
+pcs cluster destroy
+```
+
+Passwort für hacluster setzen:
+
+```shell
+passwd hacluster
+```
+
+Auf App1 oder App2 den neuen App3 authentifizieren:
+
+```shell
+pcs host auth app3.betadots.training
+pcs cluster node add app3.betadots.training
+```
+
+Ausgabe:
+
+```shell
+root@app1:~# pcs host auth app3.betadots.training
+Username: hacluster
+Password: 
+app3.betadots.training: Authorized
+root@app1:~# pcs cluster node add app3.betadots.training
+No addresses specified for host 'app3.betadots.training', using 'app3.betadots.training'
+Disabling sbd...
+app3.betadots.training: sbd disabled
+Sending 'corosync authkey', 'pacemaker authkey', 'pcs_settings.conf' to 'app3.betadots.training'
+app3.betadots.training: successful distribution of the file 'corosync authkey'
+app3.betadots.training: successful distribution of the file 'pacemaker authkey'
+app3.betadots.training: successful distribution of the file 'pcs_settings.conf'
+Sending updated corosync.conf to nodes...
+app1.betadots.training: Succeeded
+app3.betadots.training: Succeeded
+app2.betadots.training: Succeeded
+app1.betadots.training: Corosync configuration reloaded
+root@app1:~# 
+```
+
+Nun auf app3 noch die Dienste starten:
+
+```shell
+systemctl enable --now pacemaker corosync
+```
 
 Power Fencing
 
@@ -295,7 +368,7 @@ pcs stonith describe <AGENT_NAME>
 pcs cluster cib stonith_cfg
 #pcs -f stonith_cfg stonith create <STONITH_ID> <STONITH_DEVICE_TYPE> [STONITH_DEVICE_OPTIONS]
 # z.B.
-pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1.betadots.training,app2.betadots.training
+pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1.betadots.training,app2.betadots.training,app3.betadots.training
 pcs -f stonith_cfg property set stonith-enabled=true
 pcs cluster cib-push stonith_cfg
 ```
