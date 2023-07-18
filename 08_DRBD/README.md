@@ -47,7 +47,7 @@ resource drbd_disk {
     address 172.16.120.13:7789;
     volume 0 {
       device minor 0;
-      disk /dev/vg_training/lv_training;
+      disk "/dev/vg_training/lv_training";
       meta-disk internal;
     }
   }
