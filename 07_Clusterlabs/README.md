@@ -398,7 +398,7 @@ pcs resource create WebSite ocf:heartbeat:apache  \
       op monitor interval=1min
 ```
 
-Alternativ über systemd und nicht ocf Scripts:
+Alternativ über systemd und nicht ocf Scripts (Die apache Status Site wird dann nicht benutzt):
 
 ```shell
 # ggf die ocf resource löschen:
