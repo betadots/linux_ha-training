@@ -300,6 +300,19 @@ pcs -f stonith_cfg property set stonith-enabled=true
 pcs cluster cib-push stonith_cfg
 ```
 
+Fencing testen:
+
+```shell
+pcs stonith fence  app1.betadots.training # hier nicht den lokalen Knoten angeben
+```
+
+app1 sollte nun rebootet werden. Wenn das Fencing nicht klappt, tauchen Fehler in `pcs status` auf. Diese kann man wie folgt löschen:
+
+
+```shell
+stonith_admin --cleanup --history=app1.betadots.training
+```
+
 Aktiv-Passiv Cluster
 
 Wir brauchen eine Service IP, die schwenken kann.
@@ -383,6 +396,12 @@ pcs resource create WebSite ocf:heartbeat:apache  \
       configfile=/etc/apache2/apache2.conf \
       statusurl="http://localhost/server-status" \
       op monitor interval=1min
+```
+
+Alternativ über systemd und nicht ocf Scripts:
+
+```shell
+pcs resource create WebSite systemd:apache2
 ```
 
 Resource ausgeben:
