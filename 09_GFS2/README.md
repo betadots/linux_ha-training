@@ -84,6 +84,19 @@ pcs resource
 
 Corosync config (erzeugt durch PCS): `cat /etc/corosync/corosync.conf`
 
+
+dlm Status prüfen:
+
+```shell
+root@app1:~# dlm_tool status
+cluster nodeid 1 quorate 1 ring seq 36 36
+daemon now 79923 fence_pid 0 
+node 1 M add 17728 rem 0 fail 0 fence 0 at 0 0
+node 2 M add 17728 rem 0 fail 0 fence 0 at 0 0
+node 3 X add 17729 rem 17787 fail 0 fence 0 at 0 0
+root@app1:~# 
+```
+
 Weiter geht es mit [GlusterFS](../10_GlusterFS)
 
 License: CC BY-NC-SA 4.0
