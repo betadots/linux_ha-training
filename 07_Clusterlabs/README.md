@@ -493,6 +493,21 @@ Dann kann man diese wie folgt löschen:
 pcs resource cleanup ClusterIP
 ```
 
+Weitere Resource mit -Infinity
+
+Manchmal möchte man zwei Resources haben, welche auf unterschiedlichen Nodes laufen, dies kann man mit einem negativen colocation constraint setzen:
+
+```shell
+pcs resource create SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=24 op monitor interval=50s
+pcs constraint colocation add SecondIP with ClusterIP -INFINITY
+```
+
+Falls man ein Attribut einer Resource updaten möchte:
+
+```shell
+pcs resource update SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=24 op monitor interval=10s
+```
+
 Weiter geht es mit [DRBD](../08_DRBD)
 
 License: CC BY-NC-SA 4.0
