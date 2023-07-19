@@ -2,6 +2,8 @@
 
 Copyright betadots GmbH 2023
 
+Feedback: tech@betadots.de
+
 Einführung in Linux Hochverfügbarkeit
 
 ## Themen
