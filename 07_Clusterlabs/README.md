@@ -472,6 +472,19 @@ pcs constraint
 pcs status
 ```
 
+Sollte es bei Ressourcen zu irgendwelchen Fehlern gekommen sein (einsehbar in `pcs status`):
+
+```shell
+Failed Resource Actions:
+  * ClusterIP_monitor_30000 on app2.betadots.training 'error' (1): call=60, status='Timed Out', exitreason='', last-rc-change='2023-07-19 06:37:39Z', queued=0ms, exec=0ms
+```
+
+Dann kann man diese wie folgt löschen:
+
+```shell
+pcs resource cleanup ClusterIP
+```
+
 Weiter geht es mit [DRBD](../08_DRBD)
 
 License: CC BY-NC-SA 4.0
