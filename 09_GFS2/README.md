@@ -97,6 +97,8 @@ node 3 X add 17729 rem 17787 fail 0 fence 0 at 0 0
 root@app1:~# 
 ```
 
+Weitere Informationen zu GFS2: https://documentation.suse.com/sle-ha/15-SP1/html/SLE-HA-all/cha-ha-gfs2.html
+
 Weiter geht es mit [GlusterFS](../10_GlusterFS)
 
 License: CC BY-NC-SA 4.0
