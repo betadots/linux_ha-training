@@ -20,7 +20,7 @@ Cluster Resources
 Installation
 
 ACHTUNG im Training nutzen wir aktuell einen 2 Node Cluster.
-Damit kann man kein Quorum abbilden. In der Produktoin müssen das mindestens 3 und besser 5 Nodes sein!
+Damit kann man kein Quorum abbilden. In der Produktion müssen das mindestens 3 und besser 5 Nodes sein!
 
 Alle VMs hochfahren und vorbereiten
 
