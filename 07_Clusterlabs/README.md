@@ -86,8 +86,8 @@ Auf beiden Systemen:
 
 ```shell
 # hinzufügen zu /etc/hosts
-172.16.120.13 app1 app1.betadots.training
-172.16.120.14 app2 app2.betadots.training
+172.16.120.13 app1.betadots.training
+172.16.120.14 app2.betadots.training
 
 # WICHTIG: 127.0.0.1 app<n> entfernen!!!
 ```
