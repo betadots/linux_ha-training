@@ -174,6 +174,38 @@ pcsd stellt eine Web UI bereit. Erreichbar unter:
 
 Einloggen mit dem hacluster User.
 
+DRBD Connecting state
+
+Sollte es vorkommen, dass beide DRBD Instanzen Ihre Verbindung verlieren und danach einen Splitbrain haben, kann man dies wieder korrigieren. Hierzu wird `/proc/drbd` geprüft.
+
+Node 1:
+
+```
+... ro:Primary/Unknown ...
+```
+
+Node 2:
+
+```
+ro:Secondary/Unknow
+```
+
+Node 1 ist hier der Überlebende (in der Dokumentation oft "Survivor"). Auf Node 2:
+
+```
+drbdadm disconnect drbd_disk
+drbdadm secondary drbd_disk
+drbdadm connect --discard-my-data drbd_disk
+```
+
+Node 1:
+
+```
+drbdadm primary drbd_disk
+drbdadm connect drbd_disk
+```
+
+Danach auf beiden Nodes mit `drbdadm status` prüfen ob alles wieder verbunden ist.
 
 Weiter geht es mit [GFS2](../09_GFS2)
 
