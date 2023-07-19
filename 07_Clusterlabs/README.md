@@ -472,6 +472,14 @@ pcs constraint
 pcs status
 ```
 
+Das move setzt einen colocation contraint von Infinity auf den neuen Node (`pcs constraint`). Dies kann zurückgesetzt werden:
+
+```shell
+pcs resource clear WebSite
+```
+
+Dies kann dazu führen, dass die Resource wieder verschoben wird.
+
 Sollte es bei Ressourcen zu irgendwelchen Fehlern gekommen sein (einsehbar in `pcs status`):
 
 ```shell
