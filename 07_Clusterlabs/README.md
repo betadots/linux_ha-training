@@ -510,6 +510,42 @@ Falls man ein Attribut einer Resource updaten möchte:
 pcs resource update SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=24 op monitor interval=10s
 ```
 
+SBD Fencing
+
+Stonith Block Device: https://wiki.clusterlabs.org/wiki/Using_SBD_with_Pacemaker
+
+Für SBD Kann man einen Watchdog nutzen oder shared storage nutzen. Für den Watchdog müssen wir das softdog Kernelmodul laden (auf allen Nodes):
+
+```shell
+echo softdog >> /etc/modules-load.d/modules.conf
+systemctl restart systemd-modules-load
+```
+
+Möchte man eine Shared Disk nutzen, müssen wir dies in DRBD konfigurieren (Es ist vermutlich nicht sinnvoll das DRBD hier zu nutzen weil es sehr wahrscheinlich zu einem splitbrain kommt):
+
+```shell
+lvcreate --name lv_sbd --size 50M vg_training
+```
+
+Ebenfalls muss auf allen Clusternodes das sbd Paket installiert werden:
+
+```shell
+apt install -y sbd
+```
+
+Für SDB muss der Timeout von 5s auf 30s hochgesetzt werden:
+
+```shell
+sed -i 's/SBD_WATCHDOG_TIMEOUT=.*/SBD_WATCHDOG_TIMEOUT=30/' /etc/default/sbd
+sed -i 's/SBD_OPTS=.*/SBD_OPTS="-v"/' /etc/default/sbd
+```
+
+Bevor sdb konfiguriert wird, muss das Cluster gestoppt werden (??):
+
+```shell
+pcs cluster stop # will stonith the nodes
+```
+
 Weiter geht es mit [DRBD](../08_DRBD)
 
 License: CC BY-NC-SA 4.0
