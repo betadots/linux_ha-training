@@ -502,6 +502,8 @@ pcs resource create SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=
 pcs constraint colocation add SecondIP with ClusterIP -INFINITY
 ```
 
+Weitere Informationen: https://clusterlabs.github.io/PAF/CentOS-7-admin-cookbook.html#adding-ips-on-standbys-nodes
+
 Falls man ein Attribut einer Resource updaten möchte:
 
 ```shell
