@@ -546,6 +546,131 @@ Bevor sdb konfiguriert wird, muss das Cluster gestoppt werden (??):
 pcs cluster stop # will stonith the nodes
 ```
 
+Quorum Device
+
+Pacemaker hat die Möglichkeit ein 'Quorum Device' in das Cluster aufzunehmen. Dies sind Cluster Nodes auf denen keine Resources laufen. Sie werden nur genutzt damit andere Clusternodes die Verfügbarkeit um Quorum Device prüfen. Ein übliches Setup: Zwei Rechenzentren und Dienste werden zwischen den Standorten geswitcht. Um Splitbrain zu vermeiden kann man an einem dritten Standort ebenfalls einen Clusternode starten. Da dieser nur zum erreichen des Quorums genutzt wird, kann hier wesentlich kleinere Hardware genutzt werden
+
+Auf allen vorhandenen Clusternodes:
+
+```shell
+apt install -y corosync-qdevice
+```
+
+Auf dem Quorum Node:
+
+```shell
+apt install -y pcs corosync-qnetd
+systemctl enable --now pcsd
+pcs cluster destroy
+passwd hacluster
+pcs qdevice setup model net --enable --start
+pcs qdevice status net --full
+```
+
+Auf einem der vorhandenen Clusternodes muss der Quorum Node dem Cluster hinzugefügt/authentifiziert werden:
+
+```shell
+pcs host auth app3.betadots.training
+```
+
+Die vorhandene Konfiguration kann man sich noch anschauen:
+
+```shell
+pcs quorum config && pcs quorum status
+```
+
+Und dann den Quorum Node aktivieren:
+
+```shell
+pcs quorum device add model net host=app3.betadots.training algorithm=ffsplit
+```
+
+Ausgabe sollte ca so aussehen:
+
+```terminal
+root@app1:~# pcs quorum device add model net host=app3.betadots.training algorithm=ffsplit
+Setting up qdevice certificates on nodes...
+app1.betadots.training: Succeeded
+app2.betadots.training: Succeeded
+app3.betadots.training: Succeeded
+Enabling corosync-qdevice...
+app2.betadots.training: corosync-qdevice enabled
+app3.betadots.training: corosync-qdevice enabled
+app1.betadots.training: corosync-qdevice enabled
+Sending updated corosync.conf to nodes...
+app1.betadots.training: Succeeded
+app3.betadots.training: Succeeded
+app2.betadots.training: Succeeded
+app1.betadots.training: Corosync configuration reloaded
+Starting corosync-qdevice...
+app1.betadots.training: corosync-qdevice started
+app3.betadots.training: not starting corosync-qdevice: corosync is not running
+app2.betadots.training: corosync-qdevice started
+root@app1:~# 
+```
+
+Nochmal den Status prüfen, der app3 sollte hier nun auftauchen:
+
+```shell
+pcs quorum config && pcs quorum status
+```
+
+Auf dem Quorum Node kann der Status auch geprüft werden:
+
+```shell
+pcs qdevice status net --full
+```
+
+
+Ausgabe:
+
+```terminal
+root@app3:~# pcs qdevice status net --full
+QNetd address:			*:5403
+TLS:				Supported (client certificate required)
+Connected clients:		0
+Connected clusters:		0
+Maximum send/receive size:	32768/32768 bytes
+
+root@app3:~# pcs qdevice status net --full
+QNetd address:			*:5403
+TLS:				Supported (client certificate required)
+Connected clients:		2
+Connected clusters:		1
+Maximum send/receive size:	32768/32768 bytes
+Cluster "demo":
+    Algorithm:		Fifty-Fifty split (KAP Tie-breaker)
+    Tie-breaker:	Node with lowest node ID
+    Node ID 1:
+        Client address:		::ffff:172.16.120.13:51794
+        HB interval:		8000ms
+        Configured node list:	1, 2, 3
+        Ring ID:		1.66
+        Membership node list:	1, 2
+        Heuristics:		Undefined (membership: Undefined, regular: Undefined)
+        TLS active:		Yes (client certificate verified)
+        Vote:			ACK (ACK)
+    Node ID 2:
+        Client address:		::ffff:172.16.120.14:60690
+        HB interval:		8000ms
+        Configured node list:	1, 2, 3
+        Ring ID:		1.66
+        Membership node list:	1, 2
+        Heuristics:		Undefined (membership: Undefined, regular: Undefined)
+        TLS active:		Yes (client certificate verified)
+        Vote:			No change (ACK)
+
+root@app3:~# 
+```
+
+Alternativ zum Quorum Device kann man einen Node zum Cluster hinzufügen und mit:
+
+```
+pcs cluster ban $resource $node
+```
+
+Hiermit wird per opt-out bestimmt, dass auf einem Node die Resource nicht angelegt werden darf. Alternativ kann man das Cluster auch opt-in aufbauen.
+
 Weiter geht es mit [DRBD](../08_DRBD)
 
 License: CC BY-NC-SA 4.0
