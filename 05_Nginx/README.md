@@ -56,6 +56,9 @@ systemctl restart nginx
 
 Ein Backend Stoppen. Was passiert?
 
+In der nächsten Übung soll der Load Balancer Hochverfügbar gemacht werden.
+Der existierende LB1 bleibt bestehen!
+
 Weiter geht es mit [Keepalived](../06_Keepalived)
 
 License: CC BY-NC-SA 4.0

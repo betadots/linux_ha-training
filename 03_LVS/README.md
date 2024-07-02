@@ -95,7 +95,12 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
-app1:
+Login app1
+
+```shell
+vagrant ssh app1.betadots.training
+sudo -i
+```
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
@@ -106,7 +111,12 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
-app2:
+Login app2
+
+```shell
+vagrant ssh app2.betadots.training
+sudo -i
+```
 
 ```shell
 # hinzufügen zu /etc/network/interfaces
@@ -120,6 +130,8 @@ iface eth2 inet static
 ### NAT
 
 #### Einrichten des NAT
+
+lb1:
 
 ```shell
 echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
@@ -138,6 +150,8 @@ sysctl net.ipv4.vs.conntrack
 
 #### Einrichten des Masquerading
 
+lb1:
+
 ```shell
 iptables -t nat -A POSTROUTING -m ipvs --vaddr 10.100.10.11 -j MASQUERADE
 iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
@@ -146,6 +160,8 @@ iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 Jetzt ist das conntrack module geladen: `sysctl -p`
 
 #### Installation
+
+lb1:
 
 Debian `apt update; apt install -y ipvsadm`
 Almalinux `dnf install -y ipvsdam`
@@ -317,6 +333,8 @@ tcpdump  -ni eth2 port 80
 
 Jetzt kann auf den Webservice zugegriffen werden:
 
+Workstation!!!
+
 ```shell
 curl http://10.100.10.11
 ```
@@ -353,7 +371,6 @@ iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
 ```shell
 apt install -y ldirectord
-mkdir /etc/ha.d/conf
 cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/conf/ldirectord.cf
 ```
 
@@ -386,7 +403,7 @@ Web Server stoppen, `ipvsadm -L`
 Aktivieren maintenance:
 
 ```text
-# /etc/ha.d/ldirectord.cf
+# /etc/ha.d/conf/ldirectord.cf
 # main section !!!
 maintenancedir=/etc/ha.d/web/
 ```
@@ -394,7 +411,9 @@ maintenancedir=/etc/ha.d/web/
 Node deaktivieren:
 
 ```shell
+mkdir /etc/ha.d/web
 touch /etc/ha.d/web/172.16.120.13:80
+ipvsadm -L
 ```
 
 Für den nächsten Punkt müssen alle VMs neu instantiiert werden:

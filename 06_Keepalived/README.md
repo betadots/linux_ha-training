@@ -235,8 +235,11 @@ systemctl start keepalived
 
 Virtual IP: `ip a`
 
+Virtual Server hinzufügen zur Config Datei:
+
 ```text
 # /etc/keepalived/keepalived.conf
+# am Ende hinzufügen
 virtual_server 172.16.120.21 80 {
     delay_loop 6
     lb_algo rr
@@ -270,7 +273,7 @@ virtual_server 172.16.120.21 80 {
 ```
 
 ```shell
-systemctl start keepalived
+systemctl restart keepalived
 ```
 
 Alle VM Instanzen beenden: `vagrant destroy -f`

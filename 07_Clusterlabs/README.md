@@ -117,6 +117,7 @@ passwd hacluster
 Debian erzeugt automatisch einen Cluster. Den wollen wir löschen
 
 ```shell
+pcs cluster status
 pcs cluster destroy
 ```
 
@@ -133,6 +134,7 @@ Username: hacluster
 Password: 
 app1.betadots.training: Authorized
 app2.betadots.training: Authorized
+
 root@app1:~# pcs cluster setup demo app1.betadots.training app2.betadots.training
 No addresses specified for host 'app1.betadots.training', using 'app1.betadots.training'
 No addresses specified for host 'app2.betadots.training', using 'app2.betadots.training'
@@ -194,7 +196,9 @@ Cluster Starten
 (Achtung: Manchmal möchte man corosync/pacemaker nicht im autostart, kann zu flappenden Cluster führen)
 
 ```shell
-pcs cluster start --all # oder
+pcs cluster start --all
+systemctl enable corosync pacemaker
+# oder
 systemctl enable --now corosync pacemaker
 ```
 
@@ -273,7 +277,7 @@ Für das external/ssh Script muss `at` auf allen Clusternodes nachinstalliert we
 apt install -y at
 ```
 
-Danach muss als root user auf einem Knoten ein ssh key erzeugt werden:
+Danach als root user auf allen Knoten einen ssh key erzeugen:
 
 
 ```shell
@@ -281,12 +285,15 @@ ssh-keygen -t ed25519 -N '' -f /root/.ssh/id_ed25519
 cat /root/.ssh/id_ed25519.pub
 ```
 
-Der Public Key muss auf allen anderen Clusternodes in `/root/.ssh/authorized_keys` hinterlegt werden.
+Der Public Key muss auf den anderen Clusternodes in `/root/.ssh/authorized_keys` hinterlegt werden.
 
 Außerdem muss der SSH Hostkey der anderen Nodes importiert werden:
 
 ```shell
+# app1:
 ssh-keyscan app2.betadots.training >> /root/.ssh/known_hosts
+# app2:
+ssh-keyscan app1.betadots.training >> /root/.ssh/known_hosts
 ```
 
 ```shell
@@ -303,6 +310,7 @@ pcs cluster cib-push stonith_cfg
 Fencing testen:
 
 ```shell
+# app2:
 pcs stonith fence  app1.betadots.training # hier nicht den lokalen Knoten angeben
 ```
 

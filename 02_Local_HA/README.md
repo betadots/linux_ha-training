@@ -120,9 +120,8 @@ fdisk -l /dev/sdc
 Anlegen des RAID:
 
 ```shell
-root@lb1:~# mdadm --create /dev/md/0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc --metadata=1.2
-mdadm: array /dev/md/0 started.
-root@lb1:~# 
+apt install -y mdadm
+mdadm --create /dev/md/0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc --metadata=1.2
 ```
 
 Prüfen MD Device
@@ -214,6 +213,8 @@ mdadm --zero-superblock /dev/sdc
 Umgebung aufräumen
 
 ```shell
+exit # root
+exit # vagrant
 vagrant destroy -f
 ```
 

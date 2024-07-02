@@ -136,6 +136,12 @@ Stoppen eines Webservers. Was sehen wir?
 
 TODO: API, Peers
 
+Für die nächste Übung muss der Load Balancer neu eingerichtet werden:
+
+```
+vagrant destroy -f lb1.betadots.training
+```
+
 Weiter geht es mit [Nginx](../05_Nginx)
 
 License: CC BY-NC-SA 4.0
