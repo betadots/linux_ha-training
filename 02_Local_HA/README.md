@@ -56,7 +56,7 @@ network:
     bond0:
       dhcp4: no
       interfaces: [eth1, eth2]
-      addresses: [<alte eth1 IP>]
+      addresses: [10.100.10.11/24]
       parameters:
         mode: active-backup
         primary: eth1
