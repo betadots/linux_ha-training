@@ -9,6 +9,9 @@
 vagrant up lb1.betadots.training
 vagrant ssh lb1.betadots.training
 sudo -i
+# welche interfaces existieren?
+ip a
+# installation ifenslave
 apt install -y ifenslave
 ```
 
@@ -19,7 +22,7 @@ ifdown eth1
 ifdown eth2
 ```
 
-Bonding Config erzeugen:
+Bonding Config erzeugen (interfaces):
 
 ```shell
 # /etc/network/interfaces
@@ -36,6 +39,27 @@ iface bond0 inet static
     bond-miimon 100
     bond-downdelay 200
     bond-updelay 200
+```
+
+Bonding erzeugen (netplan):
+
+```yaml
+# /etc/netplan/99-bonding.yaml
+network:
+  version: 2
+  ethernets:
+    eth1:
+      optional: true
+    eth2:
+      optional: true
+  bonds:
+    bond0:
+      interfaces: [eth1, eth2]
+      addresses: [<alte eth1 IP>]
+      parameters:
+        mode: 802.3ad
+        lacp-rate: fast
+        mii-monitor-interval: 100
 ```
 
 Ist das Interface Up?
