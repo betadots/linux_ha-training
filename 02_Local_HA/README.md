@@ -101,6 +101,12 @@ Deaktivieren eth1 am Laptop:
 VBoxManage controlvm lb1.betadots.training setlinkstate2 off
 ```
 
+oder in der VM:
+
+```shell
+ip link set eth1 down
+```
+
 Anschauen in der VM:
 
 ```shell
@@ -111,6 +117,12 @@ Reaktiveren eth1
 
 ```shell
 VBoxManage controlvm lb1.betadots.training setlinkstate2 on
+```
+
+oder in der VM:
+
+```shell
+ip link set eth1 up
 ```
 
 Journal lesen in der VM:
