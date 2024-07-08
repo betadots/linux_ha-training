@@ -49,17 +49,20 @@ network:
   version: 2
   ethernets:
     eth1:
-      optional: true
+      dhcp4: no
     eth2:
-      optional: true
+      dhcp4: no
   bonds:
     bond0:
+      dhcp4: no
       interfaces: [eth1, eth2]
       addresses: [<alte eth1 IP>]
       parameters:
-        mode: 802.3ad
-        lacp-rate: fast
+        mode: active-backup
+        primary: eth1
         mii-monitor-interval: 100
+        up-delay: 200
+        down-delay: 200
 ```
 
 Ist das Interface Up?
