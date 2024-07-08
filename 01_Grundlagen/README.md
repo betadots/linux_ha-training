@@ -1,6 +1,6 @@
 # Linux HA Schulung
 
-Copyright betadots GmbH 2022
+Copyright betadots GmbH 2024
 
 Einführung in Linux Hochverfügbarkeit
 
