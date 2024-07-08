@@ -77,6 +77,14 @@ Wenn nein: Bonding starten:
 ifup bond0
 ```
 
+Bei netplan:
+
+```shell
+netplan try
+# Schauen, ob alles OK. Notfalls warten....
+netplan apply
+```
+
 Installation webserver:
 
 ```shell
