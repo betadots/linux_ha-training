@@ -229,6 +229,12 @@ mkfs.xfs /dev/md0
 mount /dev/md0 /mnt
 ```
 
+Persistieren:
+
+```shell
+mdadm --detail --scan --verbose >> /etc/mdadm/mdadm.conf
+```
+
 Anpassen Sync Rate
 
 ```shell
