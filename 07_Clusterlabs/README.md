@@ -304,6 +304,7 @@ pcs cluster cib stonith_cfg
 # z.B.
 pcs -f stonith_cfg stonith create resStonith ssh hostlist=app1.betadots.training,app2.betadots.training
 pcs -f stonith_cfg property set stonith-enabled=true
+pcs cluster verify --full -f stonith_cfg
 pcs cluster cib-push stonith_cfg
 ```
 
