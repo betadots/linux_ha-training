@@ -102,7 +102,7 @@ frontend stats
     stats uri /stats
     stats refresh 10s
     stats admin if TRUE
-    option http-use-htx
+    # option http-use-htx
     http-request use-service prometheus-exporter if { path /metrics }
 
 frontend app
@@ -138,7 +138,7 @@ TODO: API, Peers
 
 Für die nächste Übung muss der Load Balancer neu eingerichtet werden:
 
-```
+```shell
 vagrant destroy -f lb1.betadots.training
 ```
 
