@@ -353,7 +353,7 @@ echo 'net.ipv4.vs.conntrack = 1' | tee -a /etc/sysctl.conf
 sysctl -p
 ```
 
-Fehlemerldung wegen conntrack:
+Fehlermeldung wegen conntrack:
 
 Überprüfen
 
