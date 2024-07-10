@@ -3,7 +3,7 @@
 Installation
 
 ```shell
-apt install -y drbd-utils
+apt install -y drbd-utils lvm2
 ```
 
 SELinux deaktivieren
