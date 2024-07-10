@@ -521,7 +521,7 @@ pcs resource update SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=
 
 SBD Fencing
 
-Stonith Block Device: https://wiki.clusterlabs.org/wiki/Using_SBD_with_Pacemaker
+Stonith Block Device: https://projects.clusterlabs.org/w/fencing/using_sbd_with_pacemaker/
 
 Für SBD Kann man einen Watchdog nutzen oder shared storage nutzen. Für den Watchdog müssen wir das softdog Kernelmodul laden (auf allen Nodes):
 
