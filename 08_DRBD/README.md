@@ -66,6 +66,7 @@ DRBD Device initialisieren (auf beiden Nodes)
 
 ```shell
 drbdadm create-md drbd_disk
+# wenn es hier zu Fehlern kommt, muss der hostname geprüft werden (hostnamectl)
 modprobe drbd
 drbdadm up drbd_disk
 drbdadm status
