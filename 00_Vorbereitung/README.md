@@ -132,8 +132,6 @@ vagrant resume
 
 ## VM pruefen
 
-Pruefen, ob eth1 Interface eine IP hat, `ip a`. Wenn nein: `ifup eth1`
-
 Achtung: Namensauflösung innerhalb der VM.
 
 In `/etc/hosts` sicherstellen, dass folgender Eintrag entfernt wird:
