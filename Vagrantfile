@@ -59,8 +59,8 @@ Vagrant.configure('2') do |configs|
         end
       end
       setting.vm.hostname = settings['fqdn']
-      setting.vm.network :private_network, ip: settings['ip1'], auto_config: false
-      setting.vm.network :private_network, ip: settings['ip2'], auto_config: false
+      setting.vm.network :private_network, ip: settings['ip1'] # , auto_config: false
+      setting.vm.network :private_network, ip: settings['ip2'] # , auto_config: false
       setting.vm.provision 'shell', path: 'scripts/postinstall.sh', args: settings['fqdn'].to_s
       setting.hostmanager.aliases = settings['aliases']
       setting.vm.provider 'virtualbox' do |v|
