@@ -178,7 +178,7 @@ Keepalived kennt die folgenden Konfigurationen:
 
 - global_defs
 - virtual_server
-- real_server
+- real_server (Load Balancing mit LVS)
 - vrrp_sync_group
 - vrrp_instance
 
