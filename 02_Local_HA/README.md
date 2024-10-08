@@ -145,6 +145,8 @@ Bond Interface status:
 cat /proc/net/bonding/bond0
 ```
 
+---
+
 ## RAID (Software)
 
 Prüfen Festplatten:

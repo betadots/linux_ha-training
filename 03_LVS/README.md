@@ -22,7 +22,7 @@ Die virtuelle IP auf dem Virtual Server, über die die Real Server erreichbar si
 ### ipvsadm
 
 Linux Tool zum Management von LVS (Aktivierung, Verwaltung und Überwachung).
-Kann auch als Daemon laufen, um mehrere LVS Instanzen in einem CLusterverbund zu betreiben.
+Kann auch als Daemon laufen, um mehrere LVS Instanzen in einem Clusterverbund zu betreiben.
 
 ## Betriebsarten
 
@@ -60,6 +60,8 @@ Bedingung: **alle** Server (Linux Virtual Server und Real Servers) müssen IP Tu
 Der Load-Balancer nimmt die Anfragen entgegen und sendet diese an die Real-Server. Die Antworten können von den Real-Servern gesendet werden.
 
 Hier hat man keinen Tunneling Overhead, aber alle Systeme müssen im gleichen physikalischem Segment stehen.
+
+---
 
 ## Einrichtung
 
@@ -174,7 +176,7 @@ systemctl enable --now ipvsadm
 systemctl status ipvsadm
 ```
 
-#### ipvsadm
+#### Nutzung von ipvsadm
 
 `ipvsadm` ist ein Kommando:
 
@@ -189,6 +191,8 @@ Usage:
   ipvsadm -S [-n]
   ....
 ```
+
+---
 
 Einrichten des Load-Balancers:
 
@@ -371,8 +375,13 @@ iptables -t nat -A POSTROUTING -s 172.16.120.0/24 -j MASQUERADE
 
 ```shell
 apt install -y ldirectord
-mkdir -p /etc/ha.d/conf
-cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/conf/ldirectord.cf
+```
+
+Die Konfiguratoin muss in `/etc/ha.d` hinterlegt werden.
+
+```shell
+mkdir -p /etc/ha.d
+cp /usr/share/doc/ldirectord/examples/ldirectord.cf /etc/ha.d/ldirectord.cf
 ```
 
 Konfiguration anpassen

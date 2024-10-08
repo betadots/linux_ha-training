@@ -88,6 +88,7 @@ Auf beiden Systemen:
 # hinzufügen zu /etc/hosts
 172.16.120.13 app1.betadots.training
 172.16.120.14 app2.betadots.training
+172.16.120.15 app3.betadots.training
 
 # WICHTIG: 127.0.0.1 app<n> entfernen!!!
 ```
@@ -128,7 +129,7 @@ pcs host auth <fqdn1> <fqdn2>
 pcs cluster setup <name> <fqdn1> <fqdn2>
 ```
 
-```
+```text
 root@app1:~# pcs host auth app1.betadots.training app2.betadots.training
 Username: hacluster
 Password: 
@@ -270,6 +271,8 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+`/etc/hosts` anpassen!
+
 Abhängigkeiten wieder installieren und Default Cluster löschen:
 
 ```shell
@@ -352,7 +355,6 @@ apt install -y at
 
 Danach als root user auf allen Knoten einen ssh key erzeugen:
 
-
 ```shell
 ssh-keygen -t ed25519 -N '' -f /root/.ssh/id_ed25519
 cat /root/.ssh/id_ed25519.pub
@@ -389,7 +391,6 @@ pcs stonith fence  app1.betadots.training # hier nicht den lokalen Knoten angebe
 ```
 
 app1 sollte nun rebootet werden. Wenn das Fencing nicht klappt, tauchen Fehler in `pcs status` auf. Diese kann man wie folgt löschen:
-
 
 ```shell
 stonith_admin --cleanup --history=app1.betadots.training
@@ -584,7 +585,7 @@ pcs resource create SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=
 pcs constraint colocation add SecondIP with ClusterIP -INFINITY
 ```
 
-Weitere Informationen: https://clusterlabs.github.io/PAF/CentOS-7-admin-cookbook.html#adding-ips-on-standbys-nodes
+Weitere Informationen: <https://clusterlabs.github.io/PAF/CentOS-7-admin-cookbook>.html#adding-ips-on-standbys-nodes
 
 Falls man ein Attribut einer Resource updaten möchte:
 
@@ -594,7 +595,7 @@ pcs resource update SecondIP ocf:heartbeat:IPaddr2 ip=10.100.10.22 cidr_netmask=
 
 SBD Fencing
 
-Stonith Block Device: https://projects.clusterlabs.org/w/fencing/using_sbd_with_pacemaker/
+Stonith Block Device: <https://projects.clusterlabs.org/w/fencing/using_sbd_with_pacemaker/>
 
 Für SBD Kann man einen Watchdog nutzen oder shared storage nutzen. Für den Watchdog müssen wir das softdog Kernelmodul laden (auf allen Nodes):
 
@@ -703,51 +704,50 @@ Auf dem Quorum Node kann der Status auch geprüft werden:
 pcs qdevice status net --full
 ```
 
-
 Ausgabe:
 
-```terminal
+```text
 root@app3:~# pcs qdevice status net --full
-QNetd address:			*:5403
-TLS:				Supported (client certificate required)
-Connected clients:		0
-Connected clusters:		0
-Maximum send/receive size:	32768/32768 bytes
+QNetd address:        *:5403
+TLS:                Supported (client certificate required)
+Connected clients:      0
+Connected clusters:     0
+Maximum send/receive size:  32768/32768 bytes
 
 root@app3:~# pcs qdevice status net --full
-QNetd address:			*:5403
-TLS:				Supported (client certificate required)
-Connected clients:		2
-Connected clusters:		1
-Maximum send/receive size:	32768/32768 bytes
+QNetd address:         *:5403
+TLS:                Supported (client certificate required)
+Connected clients:      2
+Connected clusters:     1
+Maximum send/receive size:  32768/32768 bytes
 Cluster "demo":
-    Algorithm:		Fifty-Fifty split (KAP Tie-breaker)
-    Tie-breaker:	Node with lowest node ID
+    Algorithm:      Fifty-Fifty split (KAP Tie-breaker)
+    Tie-breaker:    Node with lowest node ID
     Node ID 1:
-        Client address:		::ffff:172.16.120.13:51794
-        HB interval:		8000ms
-        Configured node list:	1, 2, 3
-        Ring ID:		1.66
-        Membership node list:	1, 2
-        Heuristics:		Undefined (membership: Undefined, regular: Undefined)
-        TLS active:		Yes (client certificate verified)
-        Vote:			ACK (ACK)
+        Client address:     ::ffff:172.16.120.13:51794
+        HB interval:        8000ms
+        Configured node list:   1, 2, 3
+        Ring ID:        1.66
+        Membership node list:   1, 2
+        Heuristics:     Undefined (membership: Undefined, regular: Undefined)
+        TLS active:     Yes (client certificate verified)
+        Vote:           ACK (ACK)
     Node ID 2:
-        Client address:		::ffff:172.16.120.14:60690
-        HB interval:		8000ms
-        Configured node list:	1, 2, 3
-        Ring ID:		1.66
-        Membership node list:	1, 2
-        Heuristics:		Undefined (membership: Undefined, regular: Undefined)
-        TLS active:		Yes (client certificate verified)
-        Vote:			No change (ACK)
+        Client address:     ::ffff:172.16.120.14:60690
+        HB interval:        8000ms
+        Configured node list:   1, 2, 3
+        Ring ID:        1.66
+        Membership node list:   1, 2
+        Heuristics:     Undefined (membership: Undefined, regular: Undefined)
+        TLS active:     Yes (client certificate verified)
+        Vote:           No change (ACK)
 
 root@app3:~# 
 ```
 
 Alternativ zum Quorum Device kann man einen Node zum Cluster hinzufügen und mit:
 
-```
+```shell
 pcs cluster ban $resource $node
 ```
 

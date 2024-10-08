@@ -89,14 +89,14 @@ Wenn man den DHCP Server deaktivieren musste, muss das Linux System neu gestarte
 
 Virtualbox erlaubt standardmäßig nur bestimmte IP Ranges. Für unsere Demoumgebungen müssen wir weitere (oder einfach alle) erlauben:
 
-```
+```shell
 sudo mkdir /etc/vbox
 sudo echo '* 0.0.0.0/0' > /etc/vbox/networks.conf
 ```
 
 Zusätzlich deakivieren wir das erzeugen von symlinks für das zwischen VM und Host geteilte Verzeichniss:
 
-```
+```shell
 export VAGRANT_DISABLE_VBOXSYMLINKCREATE=1
 ```
 

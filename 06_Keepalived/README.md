@@ -235,6 +235,17 @@ systemctl start keepalived
 
 Virtual IP: `ip a`
 
+### Wechsel auf LVS
+
+Aktuell nutzen wir den Nginx als Load Balancer.
+Keepalived hat LVS integriert.
+
+Zuerst stoppen wir den nginx:
+
+```shell
+systemctl stop nginx
+```
+
 Virtual Server hinzufügen zur Config Datei:
 
 ```text
@@ -244,7 +255,6 @@ virtual_server 10.100.10.21 80 {
     delay_loop 6
     lb_algo rr
     lb_kind NAT
-    persistence_timeout 50
     protocol TCP
 
     real_server 172.16.120.13 80 {
@@ -274,6 +284,28 @@ virtual_server 10.100.10.21 80 {
 
 ```shell
 systemctl restart keepalived
+```
+
+Jetzt haben wir wieder einen funktionierenden LoadBanalcer.
+Einen FAST funktionierenden.
+Hier fehlt noch das Deaktivieren der ARP announcements.
+
+Hier mus sman in der `vrrp_instance` das `notify_master` hinterlegen:
+
+```text
+notify_master "/usr/local/bin/vmac_tweak.sh <vrrp.250|eth1>"
+```
+
+Das Script muss dann die ARP announcements deaktivieren:
+
+```shell
+# /usr/local/bin/vmac_tweak.sh
+#!/bin/bash
+sysctl net.ipv4.conf.all.arp_ignore=1
+sysctl net.ipv4.conf.all.arp_announce=1
+sysctl net.ipv4.conf.all.arp_filter=0
+sysctl net.ipv4.conf.eth0.arp_filter=1
+# (eth0 ist das Interface der VRRP Instanz)
 ```
 
 Alle VM Instanzen beenden: `vagrant destroy -f`
