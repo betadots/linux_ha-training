@@ -240,7 +240,7 @@ Virtual Server hinzufügen zur Config Datei:
 ```text
 # /etc/keepalived/keepalived.conf
 # am Ende hinzufügen
-virtual_server 172.16.120.21 80 {
+virtual_server 10.100.10.21 80 {
     delay_loop 6
     lb_algo rr
     lb_kind NAT
