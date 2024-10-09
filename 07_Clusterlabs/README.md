@@ -629,9 +629,24 @@ Bevor sdb konfiguriert wird, muss das Cluster gestoppt werden (??):
 pcs cluster stop # will stonith the nodes
 ```
 
+---
+
 Quorum Device
 
 Pacemaker hat die Möglichkeit ein 'Quorum Device' in das Cluster aufzunehmen. Dies sind Cluster Nodes auf denen keine Resources laufen. Sie werden nur genutzt damit andere Clusternodes die Verfügbarkeit um Quorum Device prüfen. Ein übliches Setup: Zwei Rechenzentren und Dienste werden zwischen den Standorten geswitcht. Um Splitbrain zu vermeiden kann man an einem dritten Standort ebenfalls einen Clusternode starten. Da dieser nur zum erreichen des Quorums genutzt wird, kann hier wesentlich kleinere Hardware genutzt werden
+
+Zuerst app3 aus dem Cluster entfernen:
+
+```shell
+pcs cluster node delete app3.betadots.training
+```
+
+Dann auf app3 Pacemaker/Corosync stoppen und deinstallieren:
+
+```shell
+systemctl stop pcsd pacemeker corosync
+apt purge pacemaker corosync
+```
 
 Auf allen vorhandenen Clusternodes:
 
