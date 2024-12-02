@@ -41,7 +41,7 @@ Es werden zwei Vagrant Plugins eingesetzt:
 - vagrant-hostmanager
 - vagrant-vbguest
 
-Das Hostmanager Plugin erzeugt auf dem Trainings Laptop Einträge in /etc/hosts, so dass man mit dem Browser direkt auf die VM zugreiffen kann.
+Das Hostmanager Plugin erzeugt auf dem Trainings Laptop Einträge in `/etc/hosts`, so dass man mit dem Browser direkt auf die VM zugreiffen kann.
 
 Das VBGuest Plugin installiert automatisch die VirtualBox Guest Extensions in einer VM, damit wir dieses GIT Repository als ein Volume in die VM mounten können.
 
@@ -61,7 +61,7 @@ vagrant plugin update
 Vagrant arbeitet mit vorbereiteten VM Images. Wir muessen das Debian Bullseye64 Image lokal ablegen:
 
 ```shell
-vagrant box add debian/bullseye64 --provider virtualbox
+vagrant box add debian/bookworm64 --provider virtualbox
     ==> box: Loading metadata for box 'debian/bullseye64'
         box: URL: https://vagrantcloud.com/debian/bullseye64
     ==> box: Adding box 'debian/bullseye64' (vxxx.y) for provider: virtualbox
@@ -91,7 +91,7 @@ Virtualbox erlaubt standardmäßig nur bestimmte IP Ranges. Für unsere Demoumge
 
 ```shell
 sudo mkdir /etc/vbox
-sudo echo '* 0.0.0.0/0' > /etc/vbox/networks.conf
+echo '* 0.0.0.0/0' | sudo tee /etc/vbox/networks.conf
 ```
 
 Zusätzlich deakivieren wir das erzeugen von symlinks für das zwischen VM und Host geteilte Verzeichniss:
