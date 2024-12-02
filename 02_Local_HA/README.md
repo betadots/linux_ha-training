@@ -39,6 +39,8 @@ iface bond0 inet static
     bond-miimon 100
     bond-downdelay 200
     bond-updelay 200
+    # VirtualBox unter Linux hat Probleme mit 2 Interfaces mit gleicher MAC
+    # bond-fail_over_mac 1
 ```
 
 Bonding erzeugen (netplan):
