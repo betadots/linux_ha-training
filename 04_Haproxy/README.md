@@ -92,7 +92,7 @@ apt install -y haproxy
 
 Konfiguration
 
-```text
+```cfg
 # /etc/haproxy/haproxy.cfg
 # am Ende einfügen:
 
@@ -135,6 +135,48 @@ Web Interface:
 Stoppen eines Webservers. Was sehen wir?
 
 TODO: API, Peers
+
+<details>
+  <summary><strong>Exkurs: Pfad-basiertes Load-Balancing mit HAProxy</strong></summary>
+  
+  Mithilfe von ACLs lässt sich der HAProxy konfigurieren, um spezifische Aufrufe (z.B. auf Basis eines Pfads) über gezielt zugewiesene Backends zu bedienen
+
+  lb1:
+  
+  ```cfg
+  # /etc/haproxy/haproxy.cfg
+  
+  # `app`-Frontend modifizieren und um zwei `use_backend`-Anweisungen ergänzen,
+  # um folgenden Zustand zu erreichen:
+  frontend app
+      bind *:80
+      use_backend apache if { path_beg /apache }
+      use_backend nginx if { path_beg /nginx }
+      default_backend static
+
+  # Zwei zusätzliche Backends am Ende der Datei anfügen:
+  backend apache
+      balance roundrobin
+      option httpchk HEAD /
+      http-request replace-path /apache(.*) /
+      server srv1 172.16.120.13:80 check
+  
+  backend nginx
+      balance roundrobin
+      option httpchk HEAD /
+      http-request replace-path /nginx(.*) /
+      server srv2 172.16.120.14:80 check
+  ```
+
+  Vom Laptop:
+
+  - Round-Robin: http://10.100.10.11
+  - Apache only: http://10.100.10.11/apache
+  - Nginx only: http://10.100.10.11/nginx
+
+  ---
+  
+</details>
 
 Für die nächste Übung muss der Load Balancer neu eingerichtet werden:
 
