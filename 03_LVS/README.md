@@ -97,6 +97,10 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+```shell
+ifup eth1 eth2
+```
+
 Login app1
 
 ```shell
@@ -111,6 +115,10 @@ iface eth2 inet static
     address 172.16.120.13
     netmask 255.255.255.0
     network 172.16.120.0
+```
+
+```shell
+ifup eth2
 ```
 
 Login app2
@@ -129,6 +137,10 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+```shell
+ifup eth2
+```
+
 ### NAT
 
 #### Einrichten des NAT
@@ -141,7 +153,7 @@ echo 'net.ipv4.vs.conntrack = 1' | tee -a /etc/sysctl.conf
 sysctl -p
 ```
 
-Fehlemerldung wegen conntrack:
+Fehlermeldung wegen conntrack:
 
 Überprüfen
 
@@ -165,8 +177,8 @@ Jetzt ist das conntrack module geladen: `sysctl -p`
 
 lb1:
 
-Debian `apt update; apt install -y ipvsadm`
-Almalinux `dnf install -y ipvsdam`
+- Debian: `apt update; apt install -y ipvsadm`
+- AlmaLinux: `dnf install -y ipvsdam`
 
 #### Config file anlegen (nur Almalinux)
 
@@ -268,6 +280,10 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
+```shell
+ifup eth1 eth2
+```
+
 ### Direct Routing
 
 #### Loadbalancer
@@ -303,6 +319,10 @@ iface eth1 inet static
     network 10.100.10.0
 ```
 
+```shell
+ifup eth1
+```
+
 iptables um Anfragen gegen VIP anzunehmen:
 
 ```shell
@@ -320,6 +340,10 @@ iface eth1 inet static
     address 10.100.10.14
     netmask 255.255.255.0
     network 10.100.10.0
+```
+
+```shell
+ifup eth1
 ```
 
 iptables um Anfragen gegen VIP anzunehmen:
