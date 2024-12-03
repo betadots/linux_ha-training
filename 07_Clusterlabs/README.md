@@ -11,7 +11,7 @@ Komponenten
 - corosync - Messaging und Quorum
 - Resource agents - Scripte für Services
 - Fencing agents - Scripts für Network Power Switche und SAN devices zur Isolation von Cluster Servern
-- Pacemaker - Überwachung uns Steuerung von Anwendungen oder Diensten
+- Pacemaker - Überwachung und Steuerung von Anwendungen oder Diensten
 
 Cluster Quorum
 
@@ -35,7 +35,7 @@ vagrant ssh app1.betadots.training
 sudo -i
 ```
 
-```shell
+```cfg
 # hinzufügen zu /etc/network/interfaces
 auto eth1
 iface eth1 inet static
@@ -51,8 +51,7 @@ iface eth2 inet static
 ```
 
 ```shell
-ifup eth1
-ifup eth2
+ifup eth1 eth2
 ```
 
 App2:
@@ -62,7 +61,7 @@ vagrant ssh app2.betadots.training
 sudo -i
 ```
 
-```shell
+```cfg
 # hinzufügen zu /etc/network/interfaces
 auto eth1
 iface eth1 inet static
@@ -78,19 +77,18 @@ iface eth2 inet static
 ```
 
 ```shell
-ifup eth1
-ifup eth2
+ifup eth1 eth2
 ```
 
 Auf beiden Systemen:
 
-```shell
+```cfg
 # hinzufügen zu /etc/hosts
 172.16.120.13 app1.betadots.training
 172.16.120.14 app2.betadots.training
 172.16.120.15 app3.betadots.training
 
-# WICHTIG: 127.0.0.1 app<n> entfernen!!!
+# WICHTIG: 127.0.0.1 app<n> und andere Einträge zu app<n> entfernen!!!
 ```
 
 ```shell
@@ -256,7 +254,7 @@ vagrant ssh app3.betadots.training
 sudo -i
 ```
 
-```shell
+```cfg
 # hinzufügen zu /etc/network/interfaces
 auto eth1
 iface eth1 inet static
@@ -271,7 +269,18 @@ iface eth2 inet static
     network 172.16.120.0
 ```
 
-`/etc/hosts` anpassen!
+```shell
+ifup eth1 eth2
+```
+
+```cfg
+# hinzufügen zu /etc/hosts
+172.16.120.13 app1.betadots.training
+172.16.120.14 app2.betadots.training
+172.16.120.15 app3.betadots.training
+
+# WICHTIG: 127.0.0.1 app<n> und andere Einträge zu app<n> entfernen!!!
+```
 
 Abhängigkeiten wieder installieren und Default Cluster löschen:
 
@@ -555,7 +564,7 @@ pcs constraint
 pcs status
 ```
 
-Das move setzt einen colocation contraint von Infinity auf den neuen Node (`pcs constraint`). Dies kann zurückgesetzt werden:
+Das move setzt einen colocation constraint von Infinity auf den neuen Node (`pcs constraint`). Dies kann zurückgesetzt werden:
 
 ```shell
 pcs resource clear WebSite
