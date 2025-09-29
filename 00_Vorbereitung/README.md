@@ -1,5 +1,18 @@
 # Vorbereitung
 
+## Virtualbox
+
+Debian:
+
+Download DEB Paket von https://virtualbox.org
+
+```shell
+sudo apt --fix-broken install ../Diownloads/virtualbox*.deb gcc make linux-header-amd64
+```
+
+Download VirtualBox Guest Extension von https://virtualbox.org
+Achtung: Linx speichern unter auswählen
+
 ## Vagrant Installation
 
 Bitte eine aktuelle Version von Vagrant installieren: [https://developer.hashicorp.com/vagrant/downloads](https://developer.hashicorp.com/vagrant/downloads)
