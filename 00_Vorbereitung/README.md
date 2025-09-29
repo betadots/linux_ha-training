@@ -11,7 +11,13 @@ sudo apt --fix-broken install ../Diownloads/virtualbox*.deb gcc make linux-heade
 ```
 
 Download VirtualBox Guest Extension von https://virtualbox.org
-Achtung: Linx speichern unter auswählen
+Achtung: Link speichern unter auswählen
+
+VirtualBox Setup finalisieren:
+
+```shell
+sudo /sbin/vboxconfig
+```
 
 ## Vagrant Installation
 
