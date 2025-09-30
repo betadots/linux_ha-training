@@ -140,7 +140,7 @@ pcs cluster cib fs_cfg
 pcs -f fs_cfg resource create WebFS ocf:heartbeat:Filesystem \
       device="/dev/drbd0" directory="/var/www/html" fstype="xfs"
 pcs -f fs_cfg constraint colocation add \
-      WebFS with Started WebData-clone
+      WebFS with Promoted WebData-clone
 pcs -f fs_cfg constraint order \
       promote WebData-clone then start WebFS
 ```
