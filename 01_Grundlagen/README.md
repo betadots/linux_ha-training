@@ -58,6 +58,8 @@ Loadbalancer Verteilmethoden:
 1. never queue (nq)
 1. Last-basiertes Verteilen
 
+Eine schöne Übersicht gibt es hier: https://samwho.dev/load-balancing
+
 ## Hardware HA
 
 - Strom: Redundante Netzteile
