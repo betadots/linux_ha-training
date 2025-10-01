@@ -1,6 +1,6 @@
 # Linux HA Schulung
 
-Copyright betadots GmbH 2023 - 2024
+Copyright betadots GmbH 2023 - 2025
 
 Feedback: tech@betadots.de
 

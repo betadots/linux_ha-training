@@ -1,6 +1,6 @@
 # Linux HA Schulung
 
-Copyright betadots GmbH 2024
+Copyright betadots GmbH 2025
 
 Einführung in Linux Hochverfügbarkeit
 
@@ -32,7 +32,7 @@ Unter Linux kann man RAID auch in Software abbilden (MD - Multiple Devices).
 
 Bei einem Cluster hat man einen Verbund von Systemen, die sich gegenseitig überwachen. Hier gibt es entweder das Active-Passive- oder das Active-Active-Modell.
 
-Bei einem Active-Passive Cluster soll bei einem Ausfall das aktiven Systems der Cluster selbständig die Dienste auf dem Passiven Node starten.
+Bei einem Active-Passive Cluster soll bei einem Ausfall das aktiven Systems der Cluster selbständig die Dienste auf dem passiven Node starten.
 Damit man die Systeme, die die Dienste nutzen, nicht umkonfigurieren muss, wird hier üblicherweise eine Virtuelle Service IP genutzt, die im Fehlerfall vom Aktiven auf den Passiven Node umgestellt wird.
 
 Bei einem Active-Active Cluster laufen die Dienste dauerhaft auf beiden Systemen. Diese Cluster kombinieren Hochverfügbarkeit und Lastverteilung.
@@ -59,6 +59,9 @@ Loadbalancer Verteilmethoden:
 1. Last-basiertes Verteilen
 
 Eine schöne Übersicht gibt es hier: https://samwho.dev/load-balancing
+
+Hinweis: Round-Robin kann genutzt werdne, wenn die Antwortzeiten aller Web Server annähernd gleich ist. Dies ist in den wenigsten Fällen der Fall.
+Bei unterschiedlichen Antwortzeiten, wird "least-connection" empfohlen, da dann eine neue Anfrage an den Web Serve rmit den wenigsten aktiven Verbindungen weitergeleitet wird.
 
 ## Hardware HA
 

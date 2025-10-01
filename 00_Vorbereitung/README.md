@@ -4,14 +4,14 @@
 
 Debian:
 
-Download DEB Paket von https://virtualbox.org
+Download Paket von https://virtualbox.org
 
 ```shell
 sudo apt --fix-broken install ../Diownloads/virtualbox*.deb gcc make linux-header-amd64
 ```
 
 Download VirtualBox Guest Extension von https://virtualbox.org
-Achtung: Link speichern unter auswählen
+Achtung: "Link speichern unter" auswählen
 
 VirtualBox Setup finalisieren:
 
@@ -62,7 +62,7 @@ Es werden zwei Vagrant Plugins eingesetzt:
 
 Das Hostmanager Plugin erzeugt auf dem Trainings Laptop Einträge in `/etc/hosts`, so dass man mit dem Browser direkt auf die VM zugreiffen kann.
 
-Das VBGuest Plugin installiert automatisch die VirtualBox Guest Extensions in einer VM, damit wir dieses GIT Repository als ein Volume in die VM mounten können.
+Das VBGuest Plugin installiert automatisch die VirtualBox Guest Extensions in einer VM, damit wir dieses GIT Repository als Verzeichnis in die VM mounten können.
 
 ```shell
 vagrant plugin install vagrant-hostmanager
@@ -77,7 +77,7 @@ vagrant plugin update
 
 ## Vagrant Box
 
-Vagrant arbeitet mit vorbereiteten VM Images. Wir muessen das Debian Bullseye64 Image lokal ablegen:
+Vagrant arbeitet mit vorbereiteten VM Images. Wir müssen das Debian Bullseye64 Image lokal ablegen:
 
 ```shell
 vagrant box add debian/bookworm64 --provider virtualbox
@@ -92,12 +92,10 @@ vagrant box add debian/bookworm64 --provider virtualbox
 ## Virtualbox
 
 Als Virtualisierungsbackend wird [Virtualbox](https://virtualbox.org) genutzt.
-Bitte prüfen, ob Virtualbox installiert ist, notfalls nachinstallieren.
-Ausserdem werden die VirtualBox Guest Extensions benötigt.
 
 ## VirtualBox Vorbereitung
 
-Unbedingt pruefen, ob die Host-only Netzwerke einen DHCP Server aktiviert haben !!
+Unbedingt prüfen, ob die Host-only Netzwerke einen DHCP Server aktiviert haben !!
 
 VirtualBox -> Datei -> Host-Only Netzwerk -> DHCP Server
 
@@ -105,6 +103,8 @@ Wenn der Host-Only DHCP Server aktiv ist: deaktivieren.
 Wenn im DHCP Server Daten hinterlegt sind, diese bitte durch '0.0.0.0' ersetzen (auch wenn man DHCP danach ausschaltet.
 
 Wenn man den DHCP Server deaktivieren musste, muss das Linux System neu gestartet werden! Unbedingt neu starten!
+
+Hinweis: Alternativ die VirtualBox Services stoppen und neu starten.
 
 Virtualbox erlaubt standardmäßig nur bestimmte IP Ranges. Für unsere Demoumgebungen müssen wir weitere (oder einfach alle) erlauben:
 
